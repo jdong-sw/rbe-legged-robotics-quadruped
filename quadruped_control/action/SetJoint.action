@@ -1,0 +1,14 @@
+# Define the goal
+float64[] goal
+float64 eps
+---
+# Define the result
+float64[] result
+float64 error
+float64 time
+int32 errorCode
+---
+# Define a feedback message
+float64[] positions
+float64 error
+float64 time

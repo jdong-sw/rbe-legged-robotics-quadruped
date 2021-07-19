@@ -1,0 +1,582 @@
+<robot name="quadruped">
+    <!-- <link name="world" />
+    <joint name="base_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="world" />
+        <child link="body" />
+    </joint> -->
+    <!-- ================== Body and Tail Links ================== -->
+    <link name="body">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/body.dae" />
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/body.dae" />
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="5.615" />
+            <inertia ixx="0.1487" iyy="0.2852" izz="0.3610" ixy="0.0" ixz="-0.0140" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <link name="tailbase">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/tailBase.dae" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.63" />
+            <inertia ixx="0.0054" iyy="0.0059" izz="0.0032" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <link name="tail">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/tail.dae" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.408" />
+            <inertia ixx="0.0009" iyy="0.0713" izz="0.0713" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <link name="tailtip" />
+
+    <!-- ================== Front-Right Leg Links ================== -->
+    <link name="coxa_fr">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/coxa.dae" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.63" />
+            <inertia ixx="0.0054" iyy="0.0059" izz="0.0032" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <link name="femur_fr">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/femur.dae" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.481" />
+            <inertia ixx="0.0005" iyy="0.0134" izz="0.0134" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <link name="tibia_fr">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/tibia.dae" />
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/tibia.dae" />
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="0.29" />
+            <inertia ixx="0.0002" iyy="0.0112" izz="0.0113" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <gazebo reference="tibia_fr">
+        <kp>1000000.0</kp> <!--contact stiffness-->
+        <kd>100.0</kd> <!--damping-->
+        <collision name="tibia_fr_collision">
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>1.0</mu>
+                        <mu2>1.0</mu2>
+                    </ode>
+                </friction>
+            </surface>
+        </collision>
+    </gazebo>
+
+    <link name="foot_fr" />
+
+    <!-- ================== Front-Left Leg Links ================== -->
+    <link name="coxa_fl">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/coxa.dae" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.63" />
+            <inertia ixx="0.0054" iyy="0.0059" izz="0.0032" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <link name="femur_fl">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/femur.dae" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.481" />
+            <inertia ixx="0.0005" iyy="0.0134" izz="0.0134" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <link name="tibia_fl">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/tibia.dae" />
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/tibia.dae" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.29" />
+            <inertia ixx="0.0002" iyy="0.0112" izz="0.0113" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+    <gazebo reference="tibia_fl">
+        <kp>1000000.0</kp> <!--contact stiffness-->
+        <kd>100.0</kd> <!--damping-->
+        <collision name="tibia_fl_collision">
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>1.0</mu>
+                        <mu2>1.0</mu2>
+                    </ode>
+                </friction>
+            </surface>
+        </collision>
+    </gazebo>
+    <link name="foot_fl" />
+
+    <!-- ================== Rear-Right Leg Links ================== -->
+    <link name="coxa_rr">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/coxa.dae" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.63" />
+            <inertia ixx="0.0054" iyy="0.0059" izz="0.0032" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <link name="femur_rr">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/femur.dae" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.481" />
+            <inertia ixx="0.0005" iyy="0.0134" izz="0.0134" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <link name="tibia_rr">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/tibia.dae" />
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/tibia.dae" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.29" />
+            <inertia ixx="0.0002" iyy="0.0112" izz="0.0113" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+    <gazebo reference="tibia_rr">
+        <kp>1000000.0</kp> <!--contact stiffness-->
+        <kd>100.0</kd> <!--damping-->
+        <collision name="tibia_rr_collision">
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>1.0</mu>
+                        <mu2>1.0</mu2>
+                    </ode>
+                </friction>
+            </surface>
+        </collision>
+    </gazebo>
+    <link name="foot_rr" />
+
+    <!-- ================== Rear-Left Leg Links ================== -->
+    <link name="coxa_rl">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/coxa.dae" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.63" />
+            <inertia ixx="0.0054" iyy="0.0059" izz="0.0032" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <link name="femur_rl">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/femur.dae" />
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.481" />
+            <inertia ixx="0.0005" iyy="0.0134" izz="0.0134" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+
+    </link>
+    <link name="tibia_rl">
+        <visual>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/tibia.dae" />
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://quadruped_description/meshes/tibia.dae" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.29" />
+            <inertia ixx="0.0002" iyy="0.0112" izz="0.0113" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+    <gazebo reference="tibia_rl">
+        <kp>1000000.0</kp> <!--contact stiffness-->
+        <kd>100.0</kd> <!--damping-->
+        <collision name="tibia_rl_collision">
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>1.0</mu>
+                        <mu2>1.0</mu2>
+                    </ode>
+                </friction>
+            </surface>
+        </collision>
+    </gazebo>
+    <link name="foot_rl" />
+
+    <!-- ================== Tail Joints ================== -->
+    <joint name="joint_tail_yaw" type="revolute">
+        <origin xyz="-0.1524 0 0.0508" rpy="0 0 0 " />
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="body" />
+        <child link="tailbase" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_tail_pitch" type="revolute">
+        <origin xyz="0 0 0.0762" rpy="1.57 -1.57 0" />
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="tailbase" />
+        <child link="tail" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_tailtip" type="fixed">
+        <origin xyz="0.2032 0 0" rpy="0 0 0 " />
+        <parent link="tail" />
+        <child link="tailtip" />
+    </joint>
+
+    <!-- ================== Front-Right Leg Joints ================== -->
+    <joint name="joint_hip_fr" type="revolute">
+        <origin xyz="0.1778 0.1524 0" rpy="1.57 0 -1.57" />
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="body" />
+        <child link="coxa_fr" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_knee_fr" type="revolute">
+        <origin xyz="0 0 0.0762" rpy="1.57 0 -1.57"/>
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="coxa_fr" />
+        <child link="femur_fr" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_ankle_fr" type="revolute">
+        <origin xyz="0.2032 0 0" rpy="0 0 0 " />
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="femur_fr" />
+        <child link="tibia_fr" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_foot_fr" type="fixed">
+        <origin xyz="0.2032 0 0" rpy="0 0 0 " />
+        <parent link="femur_fr" />
+        <child link="foot_fr" />
+    </joint>
+
+    <!-- ================== Front-Left Leg Joints ================== -->
+    <joint name="joint_hip_fl" type="revolute">
+        <origin xyz="0.1778 -0.1524 0" rpy="1.57 0 -1.57" />
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="body" />
+        <child link="coxa_fl" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_knee_fl" type="revolute">
+        <origin xyz="0 0 0.0762" rpy="1.57 0 -1.57"/>
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="coxa_fl" />
+        <child link="femur_fl" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_ankle_fl" type="revolute">
+        <origin xyz="0.2032 0 0" rpy="0 0 0 " />
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="femur_fl" />
+        <child link="tibia_fl" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_foot_fl" type="fixed">
+        <origin xyz="0.2032 0 0" rpy="0 0 0 " />
+        <parent link="tibia_fl" />
+        <child link="foot_fl" />
+    </joint>
+
+    <!-- ================== Rear-Right Leg Joints ================== -->
+    <joint name="joint_hip_rr" type="revolute">
+        <origin xyz="-0.1016 0.1524 0" rpy="1.57 0 -1.57" />
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="body" />
+        <child link="coxa_rr" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_knee_rr" type="revolute">
+        <origin xyz="0 0 0.0762" rpy="1.57 0 -1.57"/>
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="coxa_rr" />
+        <child link="femur_rr" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_ankle_rr" type="revolute">
+        <origin xyz="0.2032 0 0" rpy="0 0 0 " />
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="femur_rr" />
+        <child link="tibia_rr" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_foot_rr" type="fixed">
+        <origin xyz="0.2032 0 0" rpy="0 0 0 " />
+        <parent link="tibia_rr" />
+        <child link="foot_rr" />
+    </joint>
+
+    <!-- ================== Rear-Left Leg Joints ================== -->
+    <joint name="joint_hip_rl" type="revolute">
+        <origin xyz="-0.1016 -0.1524 0" rpy="1.57 0 -1.57" />
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="body" />
+        <child link="coxa_rl" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_knee_rl" type="revolute">
+        <origin xyz="0 0 0.0762" rpy="1.57 0 -1.57"/>
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="coxa_rl" />
+        <child link="femur_rl" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_ankle_rl" type="revolute">
+        <origin xyz="0.2032 0 0" rpy="0 0 0 " />
+        <limit lower="-3" upper="3" effort="30.0" velocity="6" />
+        <parent link="femur_rl" />
+        <child link="tibia_rl" />
+        <axis xyz="0 0 1" />
+        <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-3" soft_upper_limit="3" />
+    </joint>
+    <joint name="joint_foot_rl" type="fixed">
+        <origin xyz="0.2032 0 0" rpy="0 0 0 " />
+        <parent link="tibia_rl" />
+        <child link="foot_rl" />
+    </joint>
+
+    <!-- ================== Transmission ================== -->
+    <transmission name="trans_joint_tail_yaw">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_tail_yaw">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_tail_yaw_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_joint_tail_pitch">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_tail_pitch">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_tail_pitch_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="trans_joint_hip_fl">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_hip_fl">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_hip_fl_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_joint_knee_fl">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_knee_fl">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_knee_fl_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_joint_ankle_fl">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_ankle_fl">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_ankle_fl_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="trans_joint_hip_fr">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_hip_fr">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_hip_fr_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_joint_knee_fr">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_knee_fr">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_knee_fr_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_joint_ankle_fr">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_ankle_fr">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_ankle_fr_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="trans_joint_hip_rl">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_hip_rl">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_hip_rl_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_joint_knee_rl">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_knee_rl">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_knee_rl_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_joint_ankle_rl">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_ankle_rl">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_ankle_rl_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="trans_joint_hip_rr">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_hip_rr">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_hip_rr_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_joint_knee_rr">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_knee_rr">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_knee_rr_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_joint_ankle_rr">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_ankle_rr">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="joint_ankle_rr_motor">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/quadruped</robotNamespace>
+        </plugin>
+    </gazebo>
+</robot>

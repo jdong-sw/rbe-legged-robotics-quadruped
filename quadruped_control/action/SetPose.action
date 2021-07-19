@@ -1,0 +1,14 @@
+# Define the goal
+arm_control/Pose goal
+float64 eps
+---
+# Define the result
+arm_control/Pose finalPose
+float64 error
+float64 time
+int32 errorCode
+---
+# Define a feedback message
+arm_control/Pose currentPose
+float64 error
+float64 time
