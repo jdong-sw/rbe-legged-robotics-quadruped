@@ -9,33 +9,75 @@
 
 namespace quadruped_control
 {
-    class IKSolver
+    class KinematicsSolver
     {
     public:
-        IKSolver(ros::NodeHandle *node, KDL::Tree tree)
+        KinematicsSolver(ros::NodeHandle *node, KDL::Tree tree)
         {
             this->node = node;
 
             KDL::Chain chain;
-            tree.getChain("base", "EE", chain);
-            this->chain = chain;
+            tree.getChain("body", "tailtip", this->tail);
+            tree.getChain("body", "foot_fr", this->leg_fr);
+            tree.getChain("body", "foot_fl", this->leg_fl);
+            tree.getChain("body", "foot_br", this->leg_br);
+            tree.getChain("body", "foot_bl", this->leg_bl);
 
             ROS_INFO("Initializing IKPoseSolver service...");
-            this->ikPoseService = node->advertiseService("/quadruped/ik/position", &IKSolver::solveIKPose, this);
+            this->ikPoseService = node->advertiseService("/quadruped/tail/ik", &KinematicsSolver::solveIKPoseTail, this);
+            this->ikPoseService = node->advertiseService("/quadruped/leg_fr/ik", &KinematicsSolver::solveIKPoseLegFR, this);
+            this->ikPoseService = node->advertiseService("/quadruped/leg_fl/ik", &KinematicsSolver::solveIKPoseLegFL, this);
+            this->ikPoseService = node->advertiseService("/quadruped/leg_br/ik", &KinematicsSolver::solveIKPoseLegBR, this);
+            this->ikPoseService = node->advertiseService("/quadruped/leg_bl/ik", &KinematicsSolver::solveIKPoseLegBL, this);
 
             ROS_INFO("Initializing FKPoseSolver service...");
-            this->fkPoseService = node->advertiseService("/quadruped/fk/pose", &IKSolver::solveFKPose, this);
+            this->fkPoseService = node->advertiseService("/quadruped/tail/fk", &KinematicsSolver::solveFKPoseTail, this);
+            this->fkPoseService = node->advertiseService("/quadruped/leg_fr/fk", &KinematicsSolver::solveFKPoseLegFR, this);
+            this->fkPoseService = node->advertiseService("/quadruped/leg_fl/fk", &KinematicsSolver::solveFKPoseLegFL, this);
+            this->fkPoseService = node->advertiseService("/quadruped/leg_br/fk", &KinematicsSolver::solveFKPoseLegBR, this);
+            this->fkPoseService = node->advertiseService("/quadruped/leg_bl/fk", &KinematicsSolver::solveFKPoseLegBL, this);
 
             ROS_INFO("Ready.");
         }
 
-        ~IKSolver()
+        ~KinematicsSolver()
         {
             this->node->shutdown();
         }
 
-        bool solveIKPose(quadruped_control::SolveIKPoseRequest &req,
+        bool solveIKPoseTail(quadruped_control::SolveIKPoseRequest &req,
                          quadruped_control::SolveIKPoseResponse &res)
+        {
+            return solveIKPose(req, res, this->tail);
+        }
+
+        bool solveIKPoseLegFR(quadruped_control::SolveIKPoseRequest &req,
+                         quadruped_control::SolveIKPoseResponse &res)
+        {
+            return solveIKPose(req, res, this->leg_fr);
+        }
+
+        bool solveIKPoseLegFL(quadruped_control::SolveIKPoseRequest &req,
+                         quadruped_control::SolveIKPoseResponse &res)
+        {
+            return solveIKPose(req, res, this->leg_fl);
+        }
+
+        bool solveIKPoseLegBR(quadruped_control::SolveIKPoseRequest &req,
+                         quadruped_control::SolveIKPoseResponse &res)
+        {
+            return solveIKPose(req, res, this->leg_br);
+        }
+
+        bool solveIKPoseLegBL(quadruped_control::SolveIKPoseRequest &req,
+                         quadruped_control::SolveIKPoseResponse &res)
+        {
+            return solveIKPose(req, res, this->leg_bl);
+        }
+
+        bool solveIKPose(quadruped_control::SolveIKPoseRequest &req,
+                         quadruped_control::SolveIKPoseResponse &res,
+                         KDL::Chain chain)
         {
             ROS_DEBUG("Solving IK Pose...");
 
@@ -44,10 +86,10 @@ namespace quadruped_control
             Eigen::Matrix<double, 6, 1> weights;
             weights.col(0) << 1.0, 1.0, 1.0, 0.0, 0.0, 0.0;
 
-            KDL::ChainIkSolverPos_LMA posSolver(this->chain, weights);
+            KDL::ChainIkSolverPos_LMA posSolver(chain, weights);
             std::vector<double> initialstate = req.initialState;
 
-            KDL::JntArray jntArray = KDL::JntArray(7);
+            KDL::JntArray jntArray = KDL::JntArray(3);
             jntArray.data = Eigen::Map<const Eigen::VectorXd>(initialstate.data(), initialstate.size());
 
             ROS_DEBUG("Parsing rotation...");
@@ -82,15 +124,46 @@ namespace quadruped_control
 
             res.solution = sol;
             res.result = result;
-
+            res.error_message = std::string(posSolver.strError(res.result));
             return true;
         }
 
-        bool solveFKPose(quadruped_control::SolveFKPoseRequest &req,
+        bool solveFKPoseTail(quadruped_control::SolveFKPoseRequest &req,
                          quadruped_control::SolveFKPoseResponse &res)
         {
+            return solveFKPose(req, res, this->tail);
+        }
+
+        bool solveFKPoseLegFR(quadruped_control::SolveFKPoseRequest &req,
+                         quadruped_control::SolveFKPoseResponse &res)
+        {
+            return solveFKPose(req, res, this->leg_fr);
+        }
+
+        bool solveFKPoseLegFL(quadruped_control::SolveFKPoseRequest &req,
+                         quadruped_control::SolveFKPoseResponse &res)
+        {
+            return solveFKPose(req, res, this->leg_fl);
+        }
+
+        bool solveFKPoseLegBR(quadruped_control::SolveFKPoseRequest &req,
+                         quadruped_control::SolveFKPoseResponse &res)
+        {
+            return solveFKPose(req, res, this->leg_br);
+        }
+
+        bool solveFKPoseLegBL(quadruped_control::SolveFKPoseRequest &req,
+                         quadruped_control::SolveFKPoseResponse &res)
+        {
+            return solveFKPose(req, res, this->leg_bl);
+        }
+
+        bool solveFKPose(quadruped_control::SolveFKPoseRequest &req,
+                         quadruped_control::SolveFKPoseResponse &res,
+                         KDL::Chain chain)
+        {
             ROS_DEBUG("FK Pose request received.");
-            KDL::ChainFkSolverPos_recursive posSolver(this->chain);
+            KDL::ChainFkSolverPos_recursive posSolver(chain);
 
             ROS_DEBUG("Joint positions:");
             std::vector<double> jointPositions = req.jointPositions;
@@ -106,6 +179,7 @@ namespace quadruped_control
 
             int result = posSolver.JntToCart(jntArray, frame);
             res.result = result;
+            res.error_message = std::string(posSolver.strError(res.result));
 
             res.solution.x = frame.p.data[0];
             res.solution.y = frame.p.data[1];
@@ -146,7 +220,11 @@ namespace quadruped_control
         ros::ServiceServer ikPoseService;
         ros::ServiceServer fkPoseService;
 
-        KDL::Chain chain;
+        KDL::Chain tail;
+        KDL::Chain leg_fr;
+        KDL::Chain leg_fl;
+        KDL::Chain leg_br;
+        KDL::Chain leg_bl;
     };
 } // namespace quadruped_control
 
@@ -154,7 +232,7 @@ int main(int argc, char **argv)
 {
     ROS_INFO("Starting Inverse Kinematics solver...");
     ROS_INFO("Building robot tree from param server...");
-    ros::init(argc, argv, "ik_solver");
+    ros::init(argc, argv, "kinematics_solver");
     ros::NodeHandle node;
     std::string robot_desc_string;
     node.param("/robot_description", robot_desc_string, std::string());
@@ -175,9 +253,12 @@ int main(int argc, char **argv)
         ROS_INFO("Segment %s", it->second.segment.getName().c_str());
     }
 
-    quadruped_control::IKSolver solver(&node, tree);
+    quadruped_control::KinematicsSolver solver(&node, tree);
 
-    ros::spin();
+    //ros::spin();
+    ros::AsyncSpinner spinner(4);
+    spinner.start();
+    ros::waitForShutdown();
 
     return 0;
 }

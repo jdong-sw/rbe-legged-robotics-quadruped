@@ -1,4 +1,5 @@
 float64[] jointPositions
 ---
-arm_control/Pose solution
+quadruped_control/Pose solution
 int32 result
+string error_message

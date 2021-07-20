@@ -143,10 +143,10 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(ik_solver src/ik_solver.cpp)
-add_executable(pose_action_server src/pose_action_server.cpp)
-add_executable(joint_action_server src/joint_action_server.cpp)
-add_executable(move_circle scripts/move_circle.cpp)
+add_executable(kinematics_solver src/kinematics_solver.cpp)
+#add_executable(pose_action_server src/pose_action_server.cpp)
+#add_executable(joint_action_server src/joint_action_server.cpp)
+#add_executable(move_circle scripts/move_circle.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -157,16 +157,16 @@ add_executable(move_circle scripts/move_circle.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(ik_solver ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(kinematics_solver ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(ik_solver ${catkin_LIBRARIES})
-target_link_libraries(pose_action_server ${catkin_LIBRARIES})
-target_link_libraries(joint_action_server ${catkin_LIBRARIES})
-target_link_libraries(move_circle ${catkin_LIBRARIES})
+target_link_libraries(kinematics_solver ${catkin_LIBRARIES})
+#target_link_libraries(pose_action_server ${catkin_LIBRARIES})
+#target_link_libraries(joint_action_server ${catkin_LIBRARIES})
+#target_link_libraries(move_circle ${catkin_LIBRARIES})
 
 #############
 ## Install ##

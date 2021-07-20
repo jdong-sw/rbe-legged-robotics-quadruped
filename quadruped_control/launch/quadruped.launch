@@ -1,13 +1,13 @@
 <launch>
     <!-- Launch gazebo file which will start up gazebo and load controllers -->
-    <include file="$(find arm_gazebo)/launch/gazebo.launch"/>
+    <include file="$(find quadruped_control)/launch/gazebo.launch"/>
 
     <!-- Start up kinematic solver -->
-    <node name="ik_solver" pkg="arm_control" type="ik_solver" respawn="false"/>
+    <node name="ik_solver" pkg="quadruped_control" type="ik_solver" respawn="false"/>
 
     <!-- Start up joint action server -->
-    <node name="joint_action_server" pkg="arm_control" type="joint_action_server" respawn="false"/>
+    <node name="joint_action_server" pkg="quadruped_control" type="joint_action_server" respawn="false"/>
 
     <!-- Start up pose action server -->
-    <node name="pose_action_server" pkg="arm_control" type="pose_action_server" respawn="false"/>
+    <node name="pose_action_server" pkg="quadruped_control" type="pose_action_server" respawn="false"/>
 </launch>

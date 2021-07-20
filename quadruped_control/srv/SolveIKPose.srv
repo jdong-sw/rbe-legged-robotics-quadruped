@@ -1,5 +1,6 @@
 float64[] initialState
-arm_control/Pose goal
+quadruped_control/Pose goal
 ---
 float64[] solution
 int32 result
+string error_message
