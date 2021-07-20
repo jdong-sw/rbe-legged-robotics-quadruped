@@ -9,8 +9,8 @@
                 tail/yaw_joint_position_controller tail/pitch_joint_position_controller
                 leg_fr/hip_joint_position_controller leg_fr/knee_joint_position_controller leg_fr/ankle_joint_position_controller
                 leg_fl/hip_joint_position_controller leg_fl/knee_joint_position_controller leg_fl/ankle_joint_position_controller
-                leg_rr/hip_joint_position_controller leg_rr/knee_joint_position_controller leg_rr/ankle_joint_position_controller
-                leg_rl/hip_joint_position_controller leg_rl/knee_joint_position_controller leg_rl/ankle_joint_position_controller"/>
+                leg_br/hip_joint_position_controller leg_br/knee_joint_position_controller leg_br/ankle_joint_position_controller
+                leg_bl/hip_joint_position_controller leg_bl/knee_joint_position_controller leg_bl/ankle_joint_position_controller"/>
 
     <!-- Run joint state publisher -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
