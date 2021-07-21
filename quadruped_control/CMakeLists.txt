@@ -144,9 +144,16 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(kinematics_solver src/kinematics_solver.cpp)
-#add_executable(pose_action_server src/pose_action_server.cpp)
-#add_executable(joint_action_server src/joint_action_server.cpp)
-#add_executable(move_circle scripts/move_circle.cpp)
+add_executable(leg_fr_pose_action_server src/leg_fr_pose_action_server.cpp)
+add_executable(leg_fl_pose_action_server src/leg_fl_pose_action_server.cpp)
+add_executable(leg_br_pose_action_server src/leg_br_pose_action_server.cpp)
+add_executable(leg_bl_pose_action_server src/leg_bl_pose_action_server.cpp)
+add_executable(tail_pose_action_server src/tail_pose_action_server.cpp)
+add_executable(leg_fr_joint_action_server src/leg_fr_joint_action_server.cpp)
+add_executable(leg_fl_joint_action_server src/leg_fl_joint_action_server.cpp)
+add_executable(leg_br_joint_action_server src/leg_br_joint_action_server.cpp)
+add_executable(leg_bl_joint_action_server src/leg_bl_joint_action_server.cpp)
+add_executable(tail_joint_action_server src/tail_joint_action_server.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -158,15 +165,32 @@ add_executable(kinematics_solver src/kinematics_solver.cpp)
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(kinematics_solver ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_fr_pose_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_fl_pose_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_br_pose_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_bl_pose_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(tail_pose_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_fr_joint_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_fl_joint_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_br_joint_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_bl_joint_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(tail_joint_action_server ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries(kinematics_solver ${catkin_LIBRARIES})
-#target_link_libraries(pose_action_server ${catkin_LIBRARIES})
-#target_link_libraries(joint_action_server ${catkin_LIBRARIES})
-#target_link_libraries(move_circle ${catkin_LIBRARIES})
+target_link_libraries(leg_fr_pose_action_server ${catkin_LIBRARIES})
+target_link_libraries(leg_fl_pose_action_server ${catkin_LIBRARIES})
+target_link_libraries(leg_br_pose_action_server ${catkin_LIBRARIES})
+target_link_libraries(leg_bl_pose_action_server ${catkin_LIBRARIES})
+target_link_libraries(tail_pose_action_server ${catkin_LIBRARIES})
+target_link_libraries(leg_fr_joint_action_server ${catkin_LIBRARIES})
+target_link_libraries(leg_fl_joint_action_server ${catkin_LIBRARIES})
+target_link_libraries(leg_br_joint_action_server ${catkin_LIBRARIES})
+target_link_libraries(leg_bl_joint_action_server ${catkin_LIBRARIES})
+target_link_libraries(tail_joint_action_server ${catkin_LIBRARIES})
 
 #############
 ## Install ##

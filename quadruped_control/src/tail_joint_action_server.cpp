@@ -1,8 +1,8 @@
 #include "actionlib/server/simple_action_server.h"
-#include "arm_control/SetJointAction.h"
-#include "arm_control/SolveFKPose.h"
-#include "arm_control/SolveIKPose.h"
-#include "arm_control/Pose.h"
+#include "quadruped_control/SetJointAction.h"
+#include "quadruped_control/SolveFKPose.h"
+#include "quadruped_control/SolveIKPose.h"
+#include "quadruped_control/Pose.h"
 #include "sensor_msgs/JointState.h"
 #include "std_msgs/Float64.h"
 
@@ -16,15 +16,14 @@ public:
         this->node = node;
 
         ROS_INFO("Subscribing to Joint States...");
-        this->jointStateSubscriber = node.subscribe("/arm/joint_states", 10, &SetJointAction::jointStatesCB, this);
+        this->jointStateSubscriber = node.subscribe("/quadruped/joint_states", 10, &SetJointAction::jointStatesCB, this);
 
         ROS_INFO("Publishing to Joint Controllers");
-        this->joint1Publisher = node.advertise<std_msgs::Float64>("/quadruped/fr/hip_position_controller/command", 1);
-        this->joint2Publisher = node.advertise<std_msgs::Float64>("/arm/joint2_position_controller/command", 1);
-        this->joint3Publisher = node.advertise<std_msgs::Float64>("/arm/joint3_position_controller/command", 1);
+        this->tailYawJointPublisher = node.advertise<std_msgs::Float64>("/quadruped/tail/yaw_joint_position_controller/command", 1);
+        this->tailPitchJointPublisher = node.advertise<std_msgs::Float64>("/quadruped/tail/pitch_joint_position_controller/command", 1);
 
         ROS_INFO("Subscribing to FKPoseSolver service...");
-        this->fkClient = node.serviceClient<arm_control::SolveFKPose>("/arm/fk/pose");
+        this->fkClient = node.serviceClient<quadruped_control::SolveFKPose>("/quadruped/tail/fk/pose");
 
         ROS_INFO("Starting...");
         server.start();
@@ -35,22 +34,19 @@ public:
         this->node.shutdown();
     }
 
-    void executeCB(const arm_control::SetJointGoalConstPtr &goal)
+    void executeCB(const quadruped_control::SetJointGoalConstPtr &goal)
     {
         // Set goal
-        this->target1 = goal->goal[0];
-        this->target2 = goal->goal[1];
-        this->target3 = goal->goal[2];
+        this->yawTarget = goal->goal[0];
+        this->pitchTarget = goal->goal[1];
         this->eps = goal->eps;
 
         // Command joints
-        std_msgs::Float64 joint1Command, joint2Command, joint3Command;
-        joint1Command.data = this->target1;
-        joint2Command.data = this->target2;
-        joint3Command.data = this->target3;
-        joint1Publisher.publish(joint1Command);
-        joint2Publisher.publish(joint2Command);
-        joint3Publisher.publish(joint3Command);
+        std_msgs::Float64 hipJointCommand, kneeJointCommand, ankleJointCommand;
+        tailYawJointCommand.data = this->yawTarget;
+        tailPitchJointCommand.data = this->pitchTarget;
+        tailYawJointPublisher.publish(tailYawJointCommand);
+        tailPitchJointPublisher.publish(tailPitchJointCommand);
 
         // Get current time
         double start = ros::Time::now().toSec();
@@ -107,10 +103,10 @@ public:
         server.setSucceeded(this->actionResult);
     }
 
-    arm_control::SolveFKPoseResponse getCurrentPose()
+    quadruped_control::SolveFKPoseResponse getCurrentPose()
     {
         // Send FK request to service
-        arm_control::SolveFKPose fkMsg;
+        quadruped_control::SolveFKPose fkMsg;
         fkMsg.request.jointPositions = this->currentState.position;
         fkClient.call(fkMsg);
 
@@ -120,10 +116,9 @@ public:
 
     double calculateJointError()
     {
-        double error1 = this->target1 - currentState.position[0];
-        double error2 = this->target2 - currentState.position[1];
-        double error3 = this->target3 - currentState.position[2];
-        return sqrt(pow(error1, 2) + pow(error2, 2) + pow(error3, 2));
+        double yawError = this->yawTarget - currentState.position[0];
+        double pitchError = this->pitchTarget - currentState.position[1];
+        return sqrt(pow(yawError, 2) + pow(pitchError, 2));
     }
 
     bool isRobotIdle()
@@ -142,33 +137,56 @@ public:
 
     void jointStatesCB(const sensor_msgs::JointStateConstPtr& msg)
     {
-        this->currentState = *msg.get();
+        this->temp = *msg.get();
+        for (int i = 0; i < temp.name.size(), ++i)
+        {
+            std::string name_i = temp.name[i];
+            int yawIndex, pitchIndex;
+            if (name_i.find("tail") != string::npos)
+            {
+                if (name_i.find("yaw") != string::npos)
+                {
+                    yawIndex = i;
+                }
+                else if (name_i.find("pitch") != string::npos)
+                {
+                    pitchIndex = i;
+                }
+            }
+        }
+
+        this->currentState.name[0] = temp.name[yawIndex];
+        this->currentState.name[1] = temp.name[pitchIndex];
+        this->currentState.position[0] = temp.position[yawIndex];
+        this->currentState.position[1] = temp.position[pitchIndex];
+        this->currentState.velocity[0] = temp.velocity[yawIndex];
+        this->currentState.velocity[1] = temp.velocity[pitchIndex];
+        this->currentState.effort[0] = temp.effort[yawIndex];
+        this->currentState.effort[1] = temp.effort[pitchIndex];
     }
 
 private:
     std::string actionName;
     ros::NodeHandle node;
-    actionlib::SimpleActionServer<arm_control::SetJointAction>  server;
-    arm_control::SetJointFeedback actionFeedback;
-    arm_control::SetJointResult actionResult;
+    actionlib::SimpleActionServer<quadruped_control::SetJointAction>  server;
+    quadruped_control::SetJointFeedback actionFeedback;
+    quadruped_control::SetJointResult actionResult;
     ros::ServiceClient fkClient;
     ros::Subscriber jointStateSubscriber;
-    ros::Publisher joint1Publisher;
-    ros::Publisher joint2Publisher;
-    ros::Publisher joint3Publisher;
+    ros::Publisher tailYawJointPublisher;
+    ros::Publisher tailPitchJointPublisher;
     sensor_msgs::JointState currentState;
-    double target1;
-    double target2;
-    double target3;
+    double yawTarget;
+    double pitchTarget;
     double eps;
 };
 
 int main(int argc, char **argv)
 {
     ROS_INFO("Starting Joint Action Server...");
-    ros::init(argc, argv, "joint_action");
+    ros::init(argc, argv, "tail_joint_action");
 
-    SetJointAction actionServer("joint_action");
+    SetJointAction actionServer("tail_joint_action");
     ros::spin();
     return 0;
 }
