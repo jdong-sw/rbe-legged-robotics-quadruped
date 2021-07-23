@@ -306,7 +306,7 @@
 
     <!-- ================== Front-Right Leg Joints ================== -->
     <joint name="joint_hip_fr" type="revolute">
-        <origin xyz="0.1778 0.1524 0" rpy="1.57 0 -1.57" />
+        <origin xyz="0.1778 -0.1524 0" rpy="1.57 0 -1.57" />
         <limit lower="-3" upper="3" effort="30.0" velocity="6" />
         <parent link="body" />
         <child link="coxa_fr" />
@@ -331,13 +331,13 @@
     </joint>
     <joint name="joint_foot_fr" type="fixed">
         <origin xyz="0.2032 0 0" rpy="0 0 0 " />
-        <parent link="femur_fr" />
+        <parent link="tibia_fr" />
         <child link="foot_fr" />
     </joint>
 
     <!-- ================== Front-Left Leg Joints ================== -->
     <joint name="joint_hip_fl" type="revolute">
-        <origin xyz="0.1778 -0.1524 0" rpy="1.57 0 -1.57" />
+        <origin xyz="0.1778 0.1524 0" rpy="1.57 0 -1.57" />
         <limit lower="-3" upper="3" effort="30.0" velocity="6" />
         <parent link="body" />
         <child link="coxa_fl" />
@@ -368,7 +368,7 @@
 
     <!-- ================== Rear-Right Leg Joints ================== -->
     <joint name="joint_hip_br" type="revolute">
-        <origin xyz="-0.1016 0.1524 0" rpy="1.57 0 -1.57" />
+        <origin xyz="-0.1016 -0.1524 0" rpy="1.57 0 -1.57" />
         <limit lower="-3" upper="3" effort="30.0" velocity="6" />
         <parent link="body" />
         <child link="coxa_br" />
@@ -399,7 +399,7 @@
 
     <!-- ================== Rear-Left Leg Joints ================== -->
     <joint name="joint_hip_bl" type="revolute">
-        <origin xyz="-0.1016 -0.1524 0" rpy="1.57 0 -1.57" />
+        <origin xyz="-0.1016 0.1524 0" rpy="1.57 0 -1.57" />
         <limit lower="-3" upper="3" effort="30.0" velocity="6" />
         <parent link="body" />
         <child link="coxa_bl" />
