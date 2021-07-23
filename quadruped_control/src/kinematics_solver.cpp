@@ -24,18 +24,18 @@ namespace quadruped_control
             tree.getChain("body", "foot_bl", this->leg_bl);
 
             ROS_INFO("Initializing IKPoseSolver service...");
-            this->ikPoseService = node->advertiseService("/quadruped/tail/ik", &KinematicsSolver::solveIKPoseTail, this);
-            this->ikPoseService = node->advertiseService("/quadruped/leg_fr/ik", &KinematicsSolver::solveIKPoseLegFR, this);
-            this->ikPoseService = node->advertiseService("/quadruped/leg_fl/ik", &KinematicsSolver::solveIKPoseLegFL, this);
-            this->ikPoseService = node->advertiseService("/quadruped/leg_br/ik", &KinematicsSolver::solveIKPoseLegBR, this);
-            this->ikPoseService = node->advertiseService("/quadruped/leg_bl/ik", &KinematicsSolver::solveIKPoseLegBL, this);
+            this->ikTailPoseService = node->advertiseService("/quadruped/tail/ik", &KinematicsSolver::solveIKPoseTail, this);
+            this->ikFRPoseService = node->advertiseService("/quadruped/leg_fr/ik", &KinematicsSolver::solveIKPoseLegFR, this);
+            this->ikFLPoseService = node->advertiseService("/quadruped/leg_fl/ik", &KinematicsSolver::solveIKPoseLegFL, this);
+            this->ikBRPoseService = node->advertiseService("/quadruped/leg_br/ik", &KinematicsSolver::solveIKPoseLegBR, this);
+            this->ikBLPoseService = node->advertiseService("/quadruped/leg_bl/ik", &KinematicsSolver::solveIKPoseLegBL, this);
 
             ROS_INFO("Initializing FKPoseSolver service...");
-            this->fkPoseService = node->advertiseService("/quadruped/tail/fk", &KinematicsSolver::solveFKPoseTail, this);
-            this->fkPoseService = node->advertiseService("/quadruped/leg_fr/fk", &KinematicsSolver::solveFKPoseLegFR, this);
-            this->fkPoseService = node->advertiseService("/quadruped/leg_fl/fk", &KinematicsSolver::solveFKPoseLegFL, this);
-            this->fkPoseService = node->advertiseService("/quadruped/leg_br/fk", &KinematicsSolver::solveFKPoseLegBR, this);
-            this->fkPoseService = node->advertiseService("/quadruped/leg_bl/fk", &KinematicsSolver::solveFKPoseLegBL, this);
+            this->fkTailPoseService = node->advertiseService("/quadruped/tail/fk", &KinematicsSolver::solveFKPoseTail, this);
+            this->fkFRPoseService = node->advertiseService("/quadruped/leg_fr/fk", &KinematicsSolver::solveFKPoseLegFR, this);
+            this->fkFLPoseService = node->advertiseService("/quadruped/leg_fl/fk", &KinematicsSolver::solveFKPoseLegFL, this);
+            this->fkBRPoseService = node->advertiseService("/quadruped/leg_br/fk", &KinematicsSolver::solveFKPoseLegBR, this);
+            this->fkBLPoseService = node->advertiseService("/quadruped/leg_bl/fk", &KinematicsSolver::solveFKPoseLegBL, this);
 
             ROS_INFO("Ready.");
         }
@@ -217,8 +217,16 @@ namespace quadruped_control
 
     private:
         ros::NodeHandle *node;
-        ros::ServiceServer ikPoseService;
-        ros::ServiceServer fkPoseService;
+        ros::ServiceServer ikFRPoseService;
+        ros::ServiceServer ikFLPoseService;
+        ros::ServiceServer ikBRPoseService;
+        ros::ServiceServer ikBLPoseService;
+        ros::ServiceServer ikTailPoseService;
+        ros::ServiceServer fkFRPoseService;
+        ros::ServiceServer fkFLPoseService;
+        ros::ServiceServer fkBRPoseService;
+        ros::ServiceServer fkBLPoseService;
+        ros::ServiceServer fkTailPoseService;
 
         KDL::Chain tail;
         KDL::Chain leg_fr;
