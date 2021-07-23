@@ -24,7 +24,7 @@ public:
         this->ankleJointPublisher = node.advertise<std_msgs::Float64>("/quadruped/leg_bl/ankle_joint_position_controller/command", 1);
 
         ROS_INFO("Subscribing to FKPoseSolver service...");
-        this->fkClient = node.serviceClient<quadruped_control::SolveFKPose>("/quadruped/leg_bl/fk/pose");
+        this->fkClient = node.serviceClient<quadruped_control::SolveFKPose>("/quadruped/leg_bl/fk");
 
         ROS_INFO("Starting...");
         server.start();
@@ -164,18 +164,10 @@ public:
             }
         }
 
-        this->currentState.name[0] = temp.name[hipIndex];
-        this->currentState.name[1] = temp.name[kneeIndex];
-        this->currentState.name[2] = temp.name[ankleIndex];
-        this->currentState.position[0] = temp.position[hipIndex];
-        this->currentState.position[1] = temp.position[kneeIndex];
-        this->currentState.position[2] = temp.position[ankleIndex];
-        this->currentState.velocity[0] = temp.velocity[hipIndex];
-        this->currentState.velocity[1] = temp.velocity[kneeIndex];
-        this->currentState.velocity[2] = temp.velocity[ankleIndex];
-        this->currentState.effort[0] = temp.effort[hipIndex];
-        this->currentState.effort[1] = temp.effort[kneeIndex];
-        this->currentState.effort[2] = temp.effort[ankleIndex];
+        this->currentState.name = {temp.name[hipIndex], temp.name[kneeIndex], temp.name[ankleIndex]};
+        this->currentState.position = {temp.position[hipIndex], temp.position[kneeIndex], temp.position[ankleIndex]};
+        this->currentState.velocity = {temp.velocity[hipIndex], temp.velocity[kneeIndex], temp.velocity[ankleIndex]};
+        this->currentState.effort = {temp.effort[hipIndex], temp.effort[kneeIndex], temp.effort[ankleIndex]};
     }
 
 private:

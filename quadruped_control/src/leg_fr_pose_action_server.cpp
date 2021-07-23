@@ -25,10 +25,10 @@ public:
         this->jointStateSubscriber = node.subscribe("/quadruped/joint_states", 10, &SetPoseAction::jointStatesCB, this);
 
         ROS_INFO("Subscribing to IKPoseSolver service...");
-        this->ikClient = node.serviceClient<quadruped_control::SolveIKPose>("/quadruped/ik/position");
+        this->ikClient = node.serviceClient<quadruped_control::SolveIKPose>("/quadruped/leg_fr/ik");
 
         ROS_INFO("Subscribing to FKPoseSolver service...");
-        this->fkClient = node.serviceClient<quadruped_control::SolveFKPose>("/quadruped/fk/pose");
+        this->fkClient = node.serviceClient<quadruped_control::SolveFKPose>("/quadruped/leg_fr/fk");
 
         ROS_INFO("Starting...");
         server.start();
@@ -206,18 +206,10 @@ public:
             }
         }
 
-        this->currentState.name[0] = temp.name[hipIndex];
-        this->currentState.name[1] = temp.name[kneeIndex];
-        this->currentState.name[2] = temp.name[ankleIndex];
-        this->currentState.position[0] = temp.position[hipIndex];
-        this->currentState.position[1] = temp.position[kneeIndex];
-        this->currentState.position[2] = temp.position[ankleIndex];
-        this->currentState.velocity[0] = temp.velocity[hipIndex];
-        this->currentState.velocity[1] = temp.velocity[kneeIndex];
-        this->currentState.velocity[2] = temp.velocity[ankleIndex];
-        this->currentState.effort[0] = temp.effort[hipIndex];
-        this->currentState.effort[1] = temp.effort[kneeIndex];
-        this->currentState.effort[2] = temp.effort[ankleIndex];
+        this->currentState.name = {temp.name[hipIndex], temp.name[kneeIndex], temp.name[ankleIndex]};
+        this->currentState.position = {temp.position[hipIndex], temp.position[kneeIndex], temp.position[ankleIndex]};
+        this->currentState.velocity = {temp.velocity[hipIndex], temp.velocity[kneeIndex], temp.velocity[ankleIndex]};
+        this->currentState.effort = {temp.effort[hipIndex], temp.effort[kneeIndex], temp.effort[ankleIndex]};
     }
 
 private:

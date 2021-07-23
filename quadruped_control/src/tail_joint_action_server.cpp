@@ -23,7 +23,7 @@ public:
         this->tailPitchJointPublisher = node.advertise<std_msgs::Float64>("/quadruped/tail/pitch_joint_position_controller/command", 1);
 
         ROS_INFO("Subscribing to FKPoseSolver service...");
-        this->fkClient = node.serviceClient<quadruped_control::SolveFKPose>("/quadruped/tail/fk/pose");
+        this->fkClient = node.serviceClient<quadruped_control::SolveFKPose>("/quadruped/tail/fk");
 
         ROS_INFO("Starting...");
         server.start();
@@ -154,15 +154,11 @@ public:
                 }
             }
         }
-
-        this->currentState.name[0] = temp.name[yawIndex];
-        this->currentState.name[1] = temp.name[pitchIndex];
-        this->currentState.position[0] = temp.position[yawIndex];
-        this->currentState.position[1] = temp.position[pitchIndex];
-        this->currentState.velocity[0] = temp.velocity[yawIndex];
-        this->currentState.velocity[1] = temp.velocity[pitchIndex];
-        this->currentState.effort[0] = temp.effort[yawIndex];
-        this->currentState.effort[1] = temp.effort[pitchIndex];
+        
+        this->currentState.name = {temp.name[yawIndex], temp.name[pitchIndex]};
+        this->currentState.position = {temp.position[yawIndex], temp.position[pitchIndex]};
+        this->currentState.velocity = {temp.velocity[yawIndex], temp.velocity[pitchIndex]};
+        this->currentState.effort = {temp.effort[yawIndex], temp.effort[pitchIndex]};
     }
 
 private:
