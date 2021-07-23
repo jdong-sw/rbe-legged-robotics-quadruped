@@ -1,9 +1,9 @@
 <launch>
     <!-- Launch gazebo file which will start up gazebo and load controllers -->
-    <include file="$(find quadruped_control)/launch/gazebo.launch"/>
+    <include file="$(find quadruped_gazebo)/launch/gazebo.launch"/>
 
     <!-- Start up kinematic solver -->
-    <node name="ik_solver" pkg="quadruped_control" type="ik_solver" respawn="false"/>
+    <node name="kinematics_solver" pkg="quadruped_control" type="kinematics_solver" respawn="false"/>
 
     <!-- Start up joint action servers -->
     <node name="leg_fr_joint_action_server" pkg="quadruped_control" type="leg_fr_joint_action_server" respawn="false"/>
