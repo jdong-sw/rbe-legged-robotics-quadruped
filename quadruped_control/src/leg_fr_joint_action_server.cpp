@@ -143,21 +143,21 @@ public:
     void jointStatesCB(const sensor_msgs::JointStateConstPtr& msg)
     {
         this->temp = *msg.get();
-        for (int i = 0; i < temp.name.size(), ++i)
+        int hipIndex, kneeIndex, ankleIndex;
+        for (int i = 0; i < temp.name.size(); ++i)
         {
             std::string name_i = temp.name[i];
-            int hipIndex, kneeIndex, ankleIndex;
-            if (name_i.find("fr") != string::npos)
+            if (name_i.find("fr") != std::string::npos)
             {
-                if (name_i.find("hip") != string::npos)
+                if (name_i.find("hip") != std::string::npos)
                 {
                     hipIndex = i;
                 }
-                else if (name_i.find("knee") != string::npos)
+                else if (name_i.find("knee") != std::string::npos)
                 {
                     kneeIndex = i;
                 }
-                else if (name_i.find("ankle") != string::npos)
+                else if (name_i.find("ankle") != std::string::npos)
                 {
                     ankleIndex = i;
                 }
@@ -190,6 +190,7 @@ private:
     ros::Publisher kneeJointPublisher;
     ros::Publisher ankleJointPublisher;
     sensor_msgs::JointState currentState;
+    sensor_msgs::JointState temp;
     double hipTarget;
     double kneeTarget;
     double ankleTarget;

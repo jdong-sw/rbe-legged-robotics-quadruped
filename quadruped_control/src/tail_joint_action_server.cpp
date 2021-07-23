@@ -42,7 +42,7 @@ public:
         this->eps = goal->eps;
 
         // Command joints
-        std_msgs::Float64 hipJointCommand, kneeJointCommand, ankleJointCommand;
+        std_msgs::Float64 tailYawJointCommand, tailPitchJointCommand;
         tailYawJointCommand.data = this->yawTarget;
         tailPitchJointCommand.data = this->pitchTarget;
         tailYawJointPublisher.publish(tailYawJointCommand);
@@ -138,17 +138,17 @@ public:
     void jointStatesCB(const sensor_msgs::JointStateConstPtr& msg)
     {
         this->temp = *msg.get();
-        for (int i = 0; i < temp.name.size(), ++i)
+        int yawIndex, pitchIndex;
+        for (int i = 0; i < temp.name.size(); ++i)
         {
             std::string name_i = temp.name[i];
-            int yawIndex, pitchIndex;
-            if (name_i.find("tail") != string::npos)
+            if (name_i.find("tail") != std::string::npos)
             {
-                if (name_i.find("yaw") != string::npos)
+                if (name_i.find("yaw") != std::string::npos)
                 {
                     yawIndex = i;
                 }
-                else if (name_i.find("pitch") != string::npos)
+                else if (name_i.find("pitch") != std::string::npos)
                 {
                     pitchIndex = i;
                 }
@@ -176,6 +176,7 @@ private:
     ros::Publisher tailYawJointPublisher;
     ros::Publisher tailPitchJointPublisher;
     sensor_msgs::JointState currentState;
+    sensor_msgs::JointState temp;
     double yawTarget;
     double pitchTarget;
     double eps;
