@@ -1,0 +1,11 @@
+# Define the goal
+float64 initialPhase
+float64 strideTime
+float64 strideHeight
+---
+# Define the result
+int32 stepsTaken
+---
+# Define a feedback message
+float64 currentPhase
+quadruped_control/Pose currentPose

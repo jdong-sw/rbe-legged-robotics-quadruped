@@ -157,6 +157,10 @@ add_executable(leg_br_joint_action_server src/leg_br_joint_action_server.cpp)
 add_executable(leg_bl_joint_action_server src/leg_bl_joint_action_server.cpp)
 add_executable(tail_joint_action_server src/tail_joint_action_server.cpp)
 add_executable(gait_controller src/gait_controller.cpp)
+add_executable(leg_fr_trajectory_action_server src/leg_fr_trajectory_action_server.cpp)
+add_executable(leg_fl_trajectory_action_server src/leg_fl_trajectory_action_server.cpp)
+add_executable(leg_br_trajectory_action_server src/leg_br_trajectory_action_server.cpp)
+add_executable(leg_bl_trajectory_action_server src/leg_bl_trajectory_action_server.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -179,6 +183,10 @@ add_dependencies(leg_br_joint_action_server ${PROJECT_NAME}_generate_messages_cp
 add_dependencies(leg_bl_joint_action_server ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(tail_joint_action_server ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(gait_controller ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_fr_trajectory_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_fl_trajectory_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_br_trajectory_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(leg_bl_trajectory_action_server ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -196,6 +204,10 @@ target_link_libraries(leg_br_joint_action_server ${catkin_LIBRARIES})
 target_link_libraries(leg_bl_joint_action_server ${catkin_LIBRARIES})
 target_link_libraries(tail_joint_action_server ${catkin_LIBRARIES})
 target_link_libraries(gait_controller ${catkin_LIBRARIES})
+target_link_libraries(leg_fr_trajectory_action_server ${catkin_LIBRARIES})
+target_link_libraries(leg_fl_trajectory_action_server ${catkin_LIBRARIES})
+target_link_libraries(leg_br_trajectory_action_server ${catkin_LIBRARIES})
+target_link_libraries(leg_bl_trajectory_action_server ${catkin_LIBRARIES})
 
 #############
 ## Install ##
