@@ -1,13 +1,21 @@
 <launch>
     <!-- Launch gazebo file which will start up gazebo and load controllers -->
-    <include file="$(find quadruped_control)/launch/gazebo.launch"/>
+    <include file="$(find quadruped_gazebo)/launch/gazebo.launch"/>
 
     <!-- Start up kinematic solver -->
-    <node name="ik_solver" pkg="quadruped_control" type="ik_solver" respawn="false"/>
+    <node name="kinematics_solver" pkg="quadruped_control" type="kinematics_solver" respawn="false"/>
 
-    <!-- Start up joint action server -->
-    <node name="joint_action_server" pkg="quadruped_control" type="joint_action_server" respawn="false"/>
+    <!-- Start up joint action servers -->
+    <node name="leg_fr_joint_action_server" pkg="quadruped_control" type="leg_fr_joint_action_server" respawn="false"/>
+    <node name="leg_fl_joint_action_server" pkg="quadruped_control" type="leg_fl_joint_action_server" respawn="false"/>
+    <node name="leg_br_joint_action_server" pkg="quadruped_control" type="leg_br_joint_action_server" respawn="false"/>
+    <node name="leg_bl_joint_action_server" pkg="quadruped_control" type="leg_bl_joint_action_server" respawn="false"/>
+    <node name="tail_joint_action_server" pkg="quadruped_control" type="tail_joint_action_server" respawn="false"/>
 
-    <!-- Start up pose action server -->
-    <node name="pose_action_server" pkg="quadruped_control" type="pose_action_server" respawn="false"/>
+    <!-- Start up pose action servers -->
+    <node name="leg_fr_pose_action_server" pkg="quadruped_control" type="leg_fr_pose_action_server" respawn="false"/>
+    <node name="leg_fl_pose_action_server" pkg="quadruped_control" type="leg_fl_pose_action_server" respawn="false"/>
+    <node name="leg_br_pose_action_server" pkg="quadruped_control" type="leg_br_pose_action_server" respawn="false"/>
+    <node name="leg_bl_pose_action_server" pkg="quadruped_control" type="leg_bl_pose_action_server" respawn="false"/>
+    <node name="tail_pose_action_server" pkg="quadruped_control" type="tail_pose_action_server" respawn="false"/>
 </launch>
