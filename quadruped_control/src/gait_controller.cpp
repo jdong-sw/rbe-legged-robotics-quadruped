@@ -10,10 +10,10 @@ class GaitController
 {
 public:
     GaitController(std::string name) : server(node, name, boost::bind(&GaitController::executeCB, this, _1), false),
-                                       fr_client("leg_fr_trajectory_action_server", true),
-                                       fl_client("leg_fl_trajectory_action_server", true),
-                                       br_client("leg_br_trajectory_action_server", true),
-                                       bl_client("leg_bl_trajectory_action_server", true),
+                                       fr_client("leg_fr_trajectory_action", true),
+                                       fl_client("leg_fl_trajectory_action", true),
+                                       br_client("leg_br_trajectory_action", true),
+                                       bl_client("leg_bl_trajectory_action", true),
                                        actionName(name)
     {
         this->node = node;
@@ -56,14 +56,14 @@ public:
         // Calculate gait parameters
         int numSteps;
         double bodyVelocity, bodyAcceleration, strideTime, strideHeight, dutyRatio;
-        std::vector<double> relatve_phases;
+        std::vector<double> relative_phases;
         if (gaitType == 0) // Walking
         {
             // Get parameters from parameter server
             node.getParam("/quadruped/gait/walking/velocity", bodyVelocity);
             node.getParam("/quadruped/gait/walking/acceleration", bodyAcceleration);
             node.getParam("/quadruped/gait/walking/duty_ratio", dutyRatio);
-            node.getParam("/quadruped/gait/walking/relative_phase", relatve_phases);
+            node.getParam("/quadruped/gait/walking/relative_phase", relative_phases);
             node.getParam("/quadruped/gait/walking/stride_time", strideTime);
             node.getParam("/quadruped/gait/walking/stride_height", strideHeight);
         }
@@ -74,36 +74,36 @@ public:
         // Get current time
         double start = ros::Time::now().toSec();
 
+        // Publish initial gait parameters
+        std_msgs::Float64 msg;
+        msg.data = dutyRatio;
+        this->dutyRatioPublisher.publish(msg);
+
         // Send goals to trajectory servers
         ROS_INFO("Initializing leg trajectories...");
         quadruped_control::GaitGoal gaitAction;
         gaitAction.strideTime = strideTime;
         gaitAction.strideHeight = strideHeight;
-        gaitAction.initialPhase = relatve_phases[0];
+        gaitAction.initialPhase = relative_phases[0];
         this->fl_client.sendGoal(gaitAction,
                                  boost::bind(&GaitController::flResult, this, _1, _2),
                                  boost::bind(&GaitController::flActive, this),
                                  boost::bind(&GaitController::flFeedback, this, _1));
-        gaitAction.initialPhase = relatve_phases[1];
+        gaitAction.initialPhase = relative_phases[1];
         this->fr_client.sendGoal(gaitAction,
                                  boost::bind(&GaitController::frResult, this, _1, _2),
                                  boost::bind(&GaitController::frActive, this),
                                  boost::bind(&GaitController::frFeedback, this, _1));
-        gaitAction.initialPhase = relatve_phases[2];
+        gaitAction.initialPhase = relative_phases[2];
         this->bl_client.sendGoal(gaitAction,
                                  boost::bind(&GaitController::blResult, this, _1, _2),
                                  boost::bind(&GaitController::blActive, this),
                                  boost::bind(&GaitController::blFeedback, this, _1));
-        gaitAction.initialPhase = relatve_phases[3];
+        gaitAction.initialPhase = relative_phases[3];
         this->br_client.sendGoal(gaitAction,
                                  boost::bind(&GaitController::brResult, this, _1, _2),
                                  boost::bind(&GaitController::brActive, this),
                                  boost::bind(&GaitController::brFeedback, this, _1));
-
-        // Publish initial gait parameters
-        std_msgs::Float64 msg;
-        msg.data = dutyRatio;
-        this->dutyRatioPublisher.publish(msg);
 
         // Start gait loop
         ROS_INFO("Starting gait...");
@@ -150,7 +150,7 @@ public:
                     this->bodyVelocityPublisher.publish(msg);
                 }
                 // Hit target velocity
-                else if (velocity >= bodyVelocity)
+                else
                 {
                     msg.data = bodyVelocity;
                     this->bodyVelocityPublisher.publish(msg);

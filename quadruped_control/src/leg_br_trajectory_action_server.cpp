@@ -4,6 +4,8 @@
 #include "quadruped_control/GaitAction.h"
 #include "quadruped_control/Pose.h"
 #include "std_msgs/Float64.h"
+#include "geometry_msgs/Pose.h"
+#include "gazebo_msgs/GetLinkState.h"
 #include "math.h"
 
 class SetTrajectoryAction
@@ -22,6 +24,9 @@ public:
 		ROS_INFO("Subscribing to Gait Controller...");
 		this->dutyFactorSubscriber = node.subscribe("/quadruped/gait/duty_factor", 10, &SetTrajectoryAction::dutyFactorCB, this);
 		this->bodyVelocitySubscriber = node.subscribe("/quadruped/gait/body_velocity", 10, &SetTrajectoryAction::bodyVelocityCB, this);
+
+        ROS_INFO("Subscribing to Gazebo GetLinkState service");
+        this->linkStateClient = node.serviceClient<gazebo_msgs::GetLinkState>("/gazebo/get_link_state");
 		
 		ROS_INFO("Starting...");
 		server.start();
@@ -41,7 +46,8 @@ public:
 		this->strideHeight = goal->strideHeight;
 		double eps = 0.05;
 
-		double xOffset = 0.1778; // from urdf
+        // -0.1016 -0.1524 0
+		double xOffset = -0.1016; // from urdf
 		double yOffset = -0.1524; // from urdf
 		double zOffset = -0.305; // from Gazebo with default leg angles
 		
@@ -50,7 +56,7 @@ public:
 		double y = yOffset;
 		double z = zOffset;
 
-		double t, last_t;
+		double t, last_t, tau, bodyPosition;
 		int stepsTaken = 0;
 		currentPhase = this->initialPhase;
 		quadruped_control::Pose targetPose;
@@ -71,24 +77,32 @@ public:
 			currentPhase = fmod(t / this->strideTime, 1.0);
 			if (currentPhase >= this->dutyFactor) // foot in air
 			{
+                if (state == 0)
+                {
+					tau = 0;
+                    bodyPosition = GetPosition().x;
+                }
 				state = 1;
-				x = a * pow(t, 3) + b * pow(t, 2) + xOffset; // position of foot wrt ground
-				x -= bodyVelocity * (t - last_t); // position of foot wrt body
+				x = a * pow(tau, 3) + b * pow(tau, 2) + xOffset; // position of foot wrt ground
+				//x -= (GetPosition().x - bodyPosition); // position of foot wrt body
 				y = yOffset;
 				z = strideHeight * sin(omega * currentPhase * this->strideTime) + zOffset;
+				tau += (t - last_t);
 			}
 			else // foot on ground
 			{
 				if (state == 1)
 				{
 					stepsTaken += 1; // increment only if changing states
+                    bodyPosition = GetPosition().x;
 				}
 				if (this->dutyFactor == 1.0)
 				{
 					break;
 				}
 				state = 0;
-				x -= bodyVelocity * (t - last_t);
+				//x -= (GetPosition().x - bodyPosition);
+                x -= bodyVelocity * (t - last_t);
 				y = yOffset;
 				z = zOffset;
 			}
@@ -156,6 +170,7 @@ private:
 	ros::NodeHandle node;
 	actionlib::SimpleActionServer<quadruped_control::GaitAction> server;
 	actionlib::SimpleActionClient<quadruped_control::SetPoseAction> client;
+    ros::ServiceClient linkStateClient;
 	quadruped_control::GaitFeedback actionFeedback;
 	quadruped_control::GaitResult actionResult;
 	ros::Subscriber dutyFactorSubscriber;
@@ -167,6 +182,15 @@ private:
 	double strideHeight;
 	double dutyFactor;
 	double bodyVelocity;
+
+    geometry_msgs::Point GetPosition()
+    {
+        gazebo_msgs::GetLinkState linkStateMsg;
+        linkStateMsg.request.link_name = "body";
+        linkStateMsg.request.reference_frame = "world";
+        this->linkStateClient.call(linkStateMsg);
+        return linkStateMsg.response.link_state.pose.position;
+    }
 };
 
 int main(int argc, char **argv)

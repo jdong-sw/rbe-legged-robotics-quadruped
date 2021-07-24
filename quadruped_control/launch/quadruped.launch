@@ -21,4 +21,9 @@
 
     <!-- Start up gait controllers -->
     <rosparam file="$(find quadruped_control)/config/gait_parameters.yaml" ns="/quadruped/gait"/>
+    <node name="leg_fr_trajectory_action_server" pkg="quadruped_control" type="leg_fr_trajectory_action_server" respawn="false"/>
+    <node name="leg_fl_trajectory_action_server" pkg="quadruped_control" type="leg_fl_trajectory_action_server" respawn="false"/>
+    <node name="leg_br_trajectory_action_server" pkg="quadruped_control" type="leg_br_trajectory_action_server" respawn="false"/>
+    <node name="leg_bl_trajectory_action_server" pkg="quadruped_control" type="leg_bl_trajectory_action_server" respawn="false"/>
+    <node name="gait_controller" pkg="quadruped_control" type="gait_controller" respawn="false"/>
 </launch>
