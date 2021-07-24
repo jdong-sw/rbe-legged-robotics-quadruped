@@ -71,6 +71,8 @@ add_action_files(
   FILES
   SetPose.action
   SetJoint.action
+  Gait.action
+  Move.action
 )
 
 ## Generate added messages and services with any dependencies listed here
@@ -144,8 +146,8 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(kinematics_solver src/kinematics_solver.cpp)
-#add_executable(pose_action_server src/pose_action_server.cpp)
-#add_executable(joint_action_server src/joint_action_server.cpp)
+add_executable(quadruped_pose_action_server src/pose_action_server.cpp)
+add_executable(quadruped_joint_action_server src/joint_action_server.cpp)
 #add_executable(move_circle scripts/move_circle.cpp)
 
 ## Rename C++ executable without prefix
@@ -158,14 +160,16 @@ add_executable(kinematics_solver src/kinematics_solver.cpp)
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(kinematics_solver ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(quadruped_pose_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(quadruped_joint_action_server ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries(kinematics_solver ${catkin_LIBRARIES})
-#target_link_libraries(pose_action_server ${catkin_LIBRARIES})
-#target_link_libraries(joint_action_server ${catkin_LIBRARIES})
+target_link_libraries(quadruped_pose_action_server ${catkin_LIBRARIES})
+target_link_libraries(quadruped_joint_action_server ${catkin_LIBRARIES})
 #target_link_libraries(move_circle ${catkin_LIBRARIES})
 
 #############
