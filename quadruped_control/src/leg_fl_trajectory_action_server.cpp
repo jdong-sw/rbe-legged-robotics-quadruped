@@ -39,23 +39,22 @@ public:
 
 	void executeCB(const quadruped_control::GaitGoalConstPtr &goal)
 	{
+        // Get initial foot position w.r.t. body
+        // auto initialFootPosition = GetFootPosition();
+        // xOffset = initialFootPosition.x;
+        // yOffset = initialFootPosition.y;
+        // zOffset = initialFootPosition.z;
+
 		double start = ros::Time::now().toSec();
 
 		this->initialPhase = goal->initialPhase;
 		this->strideTime = goal->strideTime;
 		this->strideHeight = goal->strideHeight;
 		double eps = 0.05;
-
-		double xOffset = 0.1778; // from urdf
-		double yOffset = 0.1524; // from urdf
-		double zOffset = -0.305; // from Gazebo with default leg angles
 		
 		int state = 0;
-		double x = xOffset;
-		double y = yOffset;
-		double z = zOffset;
 
-		double t, last_t, tau, bodyPosition;
+		double t;
 		int stepsTaken = 0;
 		currentPhase = this->initialPhase;
 		quadruped_control::Pose targetPose;
@@ -63,53 +62,15 @@ public:
 		ros::Rate rate(50);
 		while (true)
 		{
-			double strideLength = this->strideTime * this->bodyVelocity;
-			double omega = M_PI / this->strideTime;
-			
-			// Solve for cubic coefficients of x(t) = a*t^3 + b*t^2 + c*t + d
-			// using 4 equations x(0) = 0, x(T) = L, dx(0) = 0, dx(T) = 0. c and d are 0
-			double a = -2 * strideLength / pow(this->strideTime, 3);
-			double b = 3 * strideLength / pow(this->strideTime, 2);
-
 			t = ros::Time::now().toSec() - start + this->initialPhase * strideTime; // account for initialPhase
 
 			currentPhase = fmod(t / this->strideTime, 1.0);
-			if (currentPhase >= this->dutyFactor) // foot in air
-			{
-                if (state == 0)
-                {
-					tau = 0;
-                    bodyPosition = GetPosition().x;
-                }
-				state = 1;
-				x = a * pow(tau, 3) + b * pow(tau, 2) + xOffset; // position of foot wrt ground
-				// x -= (GetPosition().x - bodyPosition); // position of foot wrt body
-				y = yOffset;
-				z = strideHeight * sin(omega * currentPhase * this->strideTime) + zOffset;
-				tau += (t - last_t);
-			}
-			else // foot on ground
-			{
-				if (state == 1)
-				{
-					stepsTaken += 1; // increment only if changing states
-                    bodyPosition = GetPosition().x;
-				}
-				if (this->dutyFactor == 1.0)
-				{
-					break;
-				}
-				state = 0;
-				// x -= (GetPosition().x - bodyPosition);
-				x -= bodyVelocity * (t - last_t);
-				y = yOffset;
-				z = zOffset;
-			}
+			auto position = SineTrajectory(currentPhase);
 
 			// Calculate the targetPose
-			targetPose.x = x;
-			targetPose.y = y;
-			targetPose.z = z;
+			targetPose.x = position.x;
+			targetPose.y = position.y;
+			targetPose.z = position.z;
 			targetPose.rotx = std::vector<double>{1.0, 0.0, 0.0};
 			targetPose.roty = std::vector<double>{0.0, 1.0, 0.0};
 			targetPose.rotz = std::vector<double>{0.0, 0.0, 1.0};
@@ -124,11 +85,10 @@ public:
 				boost::bind(&SetTrajectoryAction::publishFeedback, this, _1));
 
 			this->actionFeedback.currentPhase = currentPhase;
-			this->actionFeedback.currentPose = targetPose;
-			// this->actionFeedback.currentPose = currentPose;
+			this->actionFeedback.targetPose = targetPose;
+			this->actionFeedback.currentPose = currentPose;
+            this->stage = stage;
 			server.publishFeedback(this->actionFeedback);
-
-			last_t = t;
 
 			rate.sleep();
 		}
@@ -181,14 +141,56 @@ private:
 	double strideHeight;
 	double dutyFactor;
 	double bodyVelocity;
+    // 0.1778 0.1524 0
+    // double xOffset = 0.1778;
+    // double yOffset = 0.1524;
+    // double zOffset = -0.305;
+    double xOffset = 0.0639;
+    double yOffset = 0.1524;
+    double zOffset = -0.2855;
+    std::string stage;
 
-    geometry_msgs::Point GetPosition()
+    geometry_msgs::Point GetFootPosition()
     {
         gazebo_msgs::GetLinkState linkStateMsg;
-        linkStateMsg.request.link_name = "body";
-        linkStateMsg.request.reference_frame = "world";
+        linkStateMsg.request.link_name = "foot_fl";
+        linkStateMsg.request.reference_frame = "body";
         this->linkStateClient.call(linkStateMsg);
         return linkStateMsg.response.link_state.pose.position;
+    }
+
+    geometry_msgs::Point SineTrajectory(double phase)
+    {
+        // Position w.r.t. body
+        geometry_msgs::Point position;
+        double x, y, z;
+
+        double strideLength = strideTime * bodyVelocity;
+
+        // Support phase
+        if (phase < dutyFactor)
+        {
+            double supportPhase = phase / dutyFactor;
+            x = xOffset + (strideLength / 2 - strideLength * supportPhase);
+            y = yOffset;
+            z = zOffset;
+            stage = "Support Phase";
+        }
+        // Transfer phase
+        else
+        {
+            double transferPhase = (phase - dutyFactor) / (1.0 - dutyFactor);
+            x = xOffset + (strideLength * transferPhase - strideLength / 2);
+            y = yOffset;
+            z = 0.5 * strideHeight * cos(2 * M_PI * transferPhase - M_PI) + zOffset + strideHeight/2;
+            stage = "Transfer Phase";
+        }
+        
+        position.x = x;
+        position.y = y;
+        position.z = z;
+
+        return position;
     }
 };
 

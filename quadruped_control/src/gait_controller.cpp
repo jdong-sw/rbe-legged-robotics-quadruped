@@ -20,7 +20,7 @@ public:
 
         ROS_INFO("Starting gait parameters publishers...");
         this->dutyRatioPublisher = node.advertise<std_msgs::Float64>(
-            "/quadruped/gait/duty_ratio", 1);
+            "/quadruped/gait/duty_factor", 1);
         this->bodyVelocityPublisher = node.advertise<std_msgs::Float64>(
             "/quadruped/gait/body_velocity", 1);
 
@@ -62,7 +62,7 @@ public:
             // Get parameters from parameter server
             node.getParam("/quadruped/gait/walking/velocity", bodyVelocity);
             node.getParam("/quadruped/gait/walking/acceleration", bodyAcceleration);
-            node.getParam("/quadruped/gait/walking/duty_ratio", dutyRatio);
+            node.getParam("/quadruped/gait/walking/duty_factor", dutyRatio);
             node.getParam("/quadruped/gait/walking/relative_phase", relative_phases);
             node.getParam("/quadruped/gait/walking/stride_time", strideTime);
             node.getParam("/quadruped/gait/walking/stride_height", strideHeight);
@@ -201,6 +201,7 @@ public:
             // Publish feedback
             this->actionFeedback.distance = distanceTraveled;
             this->actionFeedback.time = elapsed;
+            this->actionFeedback.description = description;
             server.publishFeedback(this->actionFeedback);
 
             rate.sleep();

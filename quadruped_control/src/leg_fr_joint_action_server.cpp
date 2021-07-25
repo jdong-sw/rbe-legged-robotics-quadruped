@@ -67,7 +67,7 @@ public:
         }
 
         // Wait for joints to start moving
-        ros::Rate rate(20);
+        ros::Rate rate(50);
         while(isRobotIdle())
         {
             rate.sleep();

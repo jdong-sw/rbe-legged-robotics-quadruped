@@ -1,7 +1,7 @@
 <robot name="quadruped">
     <!-- <link name="world" />
     <joint name="base_joint" type="fixed">
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 0.5" rpy="0 0 0" />
         <parent link="world" />
         <child link="body" />
     </joint> -->
