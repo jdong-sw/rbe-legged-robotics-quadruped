@@ -22,8 +22,15 @@
             <mass value="5.615" />
             <inertia ixx="0.1487" iyy="0.2852" izz="0.3610" ixy="0.0" ixz="-0.0140" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="body_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <link name="tailbase">
         <visual>
             <geometry>
@@ -34,8 +41,15 @@
             <mass value="0.63" />
             <inertia ixx="0.0054" iyy="0.0059" izz="0.0032" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="tailbase_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <link name="tail">
         <visual>
             <geometry>
@@ -46,8 +60,15 @@
             <mass value="0.408" />
             <inertia ixx="0.0009" iyy="0.0713" izz="0.0713" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="tail_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <link name="tailtip" />
 
     <!-- ================== Front-Right Leg Links ================== -->
@@ -61,8 +82,15 @@
             <mass value="0.63" />
             <inertia ixx="0.0054" iyy="0.0059" izz="0.0032" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="coxa_fr_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <link name="femur_fr">
         <visual>
             <geometry>
@@ -73,8 +101,15 @@
             <mass value="0.481" />
             <inertia ixx="0.0005" iyy="0.0134" izz="0.0134" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="femur_fr_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <link name="tibia_fr">
         <visual>
             <geometry>
@@ -91,8 +126,15 @@
             <mass value="0.29" />
             <inertia ixx="0.0002" iyy="0.0112" izz="0.0113" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="tibia_fr_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <gazebo reference="tibia_fr">
         <kp>1000000.0</kp> <!--contact stiffness-->
         <kd>100.0</kd> <!--damping-->
@@ -108,7 +150,12 @@
         </collision>
     </gazebo>
 
-    <link name="foot_fr" />
+    <link name="foot_fr">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
 
     <!-- ================== Front-Left Leg Links ================== -->
     <link name="coxa_fl">
@@ -121,8 +168,15 @@
             <mass value="0.63" />
             <inertia ixx="0.0054" iyy="0.0059" izz="0.0032" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="coxa_fl_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <link name="femur_fl">
         <visual>
             <geometry>
@@ -133,8 +187,15 @@
             <mass value="0.481" />
             <inertia ixx="0.0005" iyy="0.0134" izz="0.0134" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="femur_fl_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <link name="tibia_fl">
         <visual>
             <geometry>
@@ -151,6 +212,14 @@
             <inertia ixx="0.0002" iyy="0.0112" izz="0.0113" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
     </link>
+
+    <link name="tibia_fl_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <gazebo reference="tibia_fl">
         <kp>1000000.0</kp> <!--contact stiffness-->
         <kd>100.0</kd> <!--damping-->
@@ -165,7 +234,13 @@
             </surface>
         </collision>
     </gazebo>
-    <link name="foot_fl" />
+
+    <link name="foot_fl">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
 
     <!-- ================== Rear-Right Leg Links ================== -->
     <link name="coxa_br">
@@ -178,8 +253,15 @@
             <mass value="0.63" />
             <inertia ixx="0.0054" iyy="0.0059" izz="0.0032" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="coxa_br_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <link name="femur_br">
         <visual>
             <geometry>
@@ -190,8 +272,15 @@
             <mass value="0.481" />
             <inertia ixx="0.0005" iyy="0.0134" izz="0.0134" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="femur_br_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <link name="tibia_br">
         <visual>
             <geometry>
@@ -208,6 +297,14 @@
             <inertia ixx="0.0002" iyy="0.0112" izz="0.0113" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
     </link>
+
+    <link name="tibia_br_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <gazebo reference="tibia_br">
         <kp>1000000.0</kp> <!--contact stiffness-->
         <kd>100.0</kd> <!--damping-->
@@ -222,7 +319,13 @@
             </surface>
         </collision>
     </gazebo>
-    <link name="foot_br" />
+
+    <link name="foot_br">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
 
     <!-- ================== Rear-Left Leg Links ================== -->
     <link name="coxa_bl">
@@ -235,8 +338,15 @@
             <mass value="0.63" />
             <inertia ixx="0.0054" iyy="0.0059" izz="0.0032" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="coxa_bl_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <link name="femur_bl">
         <visual>
             <geometry>
@@ -247,8 +357,15 @@
             <mass value="0.481" />
             <inertia ixx="0.0005" iyy="0.0134" izz="0.0134" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
-
     </link>
+
+    <link name="femur_bl_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <link name="tibia_bl">
         <visual>
             <geometry>
@@ -265,6 +382,14 @@
             <inertia ixx="0.0002" iyy="0.0112" izz="0.0113" ixy="0.0" ixz="0.0" iyz="0.0" />
         </inertial>
     </link>
+
+    <link name="tibia_bl_com">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
     <gazebo reference="tibia_bl">
         <kp>1000000.0</kp> <!--contact stiffness-->
         <kd>100.0</kd> <!--damping-->
@@ -279,9 +404,30 @@
             </surface>
         </collision>
     </gazebo>
-    <link name="foot_bl" />
+
+    <link name="foot_bl">
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.0001" iyy="0.0" izz="0.0" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
 
     <!-- ================== Tail Joints ================== -->
+    <joint name="joint_body_com" type="fixed">
+        <origin xyz="0.01781 0.0 0.00882" rpy="0 0 0 " />
+        <parent link="body" />
+        <child link="body_com" />
+    </joint>
+    <joint name="joint_tailbase_com" type="fixed">
+        <origin xyz="0.0 0.0 0.04244" rpy="0 0 0 " />
+        <parent link="tailbase" />
+        <child link="tailbase_com" />
+    </joint>
+    <joint name="joint_tail_com" type="fixed">
+        <origin xyz="0.15694 0.0 0.0" rpy="0 0 0 " />
+        <parent link="tail" />
+        <child link="tail_com" />
+    </joint>
     <joint name="joint_tail_yaw" type="revolute">
         <origin xyz="-0.1524 0 0.0508" rpy="0 0 0 " />
         <limit lower="-3" upper="3" effort="30.0" velocity="6" />
@@ -303,8 +449,32 @@
         <parent link="tail" />
         <child link="tailtip" />
     </joint>
+    <gazebo reference="joint_body_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_tailbase_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_tail_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
 
     <!-- ================== Front-Right Leg Joints ================== -->
+    <joint name="joint_coxa_fr_com" type="fixed">
+        <origin xyz="0.0 0.0 0.04183" rpy="0 0 0 " />
+        <parent link="coxa_fr" />
+        <child link="coxa_fr_com" />
+    </joint>
+    <joint name="joint_femur_fr_com" type="fixed">
+        <origin xyz="0.08660 0.0 0.0" rpy="0 0 0 " />
+        <parent link="femur_fr" />
+        <child link="femur_fr_com" />
+    </joint>
+    <joint name="joint_tibia_fr_com" type="fixed">
+        <origin xyz="0.10609 0.0 0.0" rpy="0 0 0 " />
+        <parent link="tibia_fr" />
+        <child link="tibia_fr_com" />
+    </joint>
     <joint name="joint_hip_fr" type="revolute">
         <origin xyz="0.1778 -0.1524 0" rpy="1.57 0 -1.57" />
         <limit lower="-3" upper="3" effort="30.0" velocity="6" />
@@ -334,8 +504,35 @@
         <parent link="tibia_fr" />
         <child link="foot_fr" />
     </joint>
+    <gazebo reference="joint_coxa_fr_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_femur_fr_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_tibia_fr_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_foot_fr">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
 
     <!-- ================== Front-Left Leg Joints ================== -->
+    <joint name="joint_coxa_fl_com" type="fixed">
+        <origin xyz="0.0 0.0 0.04183" rpy="0 0 0 " />
+        <parent link="coxa_fl" />
+        <child link="coxa_fl_com" />
+    </joint>
+    <joint name="joint_femur_fl_com" type="fixed">
+        <origin xyz="0.08660 0.0 0.0" rpy="0 0 0 " />
+        <parent link="femur_fl" />
+        <child link="femur_fl_com" />
+    </joint>
+    <joint name="joint_tibia_fl_com" type="fixed">
+        <origin xyz="0.10609 0.0 0.0" rpy="0 0 0 " />
+        <parent link="tibia_fl" />
+        <child link="tibia_fl_com" />
+    </joint>
     <joint name="joint_hip_fl" type="revolute">
         <origin xyz="0.1778 0.1524 0" rpy="1.57 0 -1.57" />
         <limit lower="-3" upper="3" effort="30.0" velocity="6" />
@@ -365,8 +562,35 @@
         <parent link="tibia_fl" />
         <child link="foot_fl" />
     </joint>
+    <gazebo reference="joint_coxa_fl_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_femur_fl_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_tibia_fl_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_foot_fl">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
 
-    <!-- ================== Rear-Right Leg Joints ================== -->
+    <!-- ================== Back-Right Leg Joints ================== -->
+    <joint name="joint_coxa_br_com" type="fixed">
+        <origin xyz="0.0 0.0 0.04183" rpy="0 0 0 " />
+        <parent link="coxa_br" />
+        <child link="coxa_br_com" />
+    </joint>
+    <joint name="joint_femur_br_com" type="fixed">
+        <origin xyz="0.08660 0.0 0.0" rpy="0 0 0 " />
+        <parent link="femur_br" />
+        <child link="femur_br_com" />
+    </joint>
+    <joint name="joint_tibia_br_com" type="fixed">
+        <origin xyz="0.10609 0.0 0.0" rpy="0 0 0 " />
+        <parent link="tibia_br" />
+        <child link="tibia_br_com" />
+    </joint>
     <joint name="joint_hip_br" type="revolute">
         <origin xyz="-0.1016 -0.1524 0" rpy="1.57 0 -1.57" />
         <limit lower="-3" upper="3" effort="30.0" velocity="6" />
@@ -396,8 +620,35 @@
         <parent link="tibia_br" />
         <child link="foot_br" />
     </joint>
+    <gazebo reference="joint_coxa_br_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_femur_br_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_tibia_br_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_foot_br">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
 
-    <!-- ================== Rear-Left Leg Joints ================== -->
+    <!-- ================== Back-Left Leg Joints ================== -->
+    <joint name="joint_coxa_bl_com" type="fixed">
+        <origin xyz="0.0 0.0 0.04183" rpy="0 0 0 " />
+        <parent link="coxa_bl" />
+        <child link="coxa_bl_com" />
+    </joint>
+    <joint name="joint_femur_bl_com" type="fixed">
+        <origin xyz="0.08660 0.0 0.0" rpy="0 0 0 " />
+        <parent link="femur_bl" />
+        <child link="femur_bl_com" />
+    </joint>
+    <joint name="joint_tibia_bl_com" type="fixed">
+        <origin xyz="0.10609 0.0 0.0" rpy="0 0 0 " />
+        <parent link="tibia_bl" />
+        <child link="tibia_bl_com" />
+    </joint>
     <joint name="joint_hip_bl" type="revolute">
         <origin xyz="-0.1016 0.1524 0" rpy="1.57 0 -1.57" />
         <limit lower="-3" upper="3" effort="30.0" velocity="6" />
@@ -427,6 +678,18 @@
         <parent link="tibia_bl" />
         <child link="foot_bl" />
     </joint>
+    <gazebo reference="joint_coxa_bl_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_femur_bl_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_tibia_bl_com">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
+    <gazebo reference="joint_foot_bl">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
 
     <!-- ================== Transmission ================== -->
     <transmission name="trans_joint_tail_yaw">

@@ -165,7 +165,10 @@ private:
         geometry_msgs::Point position;
         double x, y, z;
 
-        double strideLength = strideTime * bodyVelocity;
+		double strideLength = strideTime * bodyVelocity;
+        // double strideLength = (strideTime * bodyVelocity) / 2 - (currentPose.x - xOffset);
+		ROS_INFO("fr stride length: %f", strideLength);
+		// L = max_L/2 - x, where x is the offset from the hip, between -L/2 and 0
 
         // Support phase
         if (phase < dutyFactor)
