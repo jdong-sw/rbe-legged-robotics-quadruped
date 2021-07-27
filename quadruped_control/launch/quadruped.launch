@@ -13,11 +13,11 @@
     <node name="tail_joint_action_server" pkg="quadruped_control" type="tail_joint_action_server" respawn="false"/>
 
     <!-- Start up pose action servers -->
-    <node name="leg_fr_pose_action_server" pkg="quadruped_control" type="leg_fr_pose_action_server" respawn="false"/>
-    <node name="leg_fl_pose_action_server" pkg="quadruped_control" type="leg_fl_pose_action_server" respawn="false"/>
-    <node name="leg_br_pose_action_server" pkg="quadruped_control" type="leg_br_pose_action_server" respawn="false"/>
-    <node name="leg_bl_pose_action_server" pkg="quadruped_control" type="leg_bl_pose_action_server" respawn="false"/>
-    <node name="tail_pose_action_server" pkg="quadruped_control" type="tail_pose_action_server" respawn="false"/>
+    <node name="leg_fr_pose_action_server" pkg="quadruped_control" type="leg_fr_pose_action_server" respawn="true"/>
+    <node name="leg_fl_pose_action_server" pkg="quadruped_control" type="leg_fl_pose_action_server" respawn="true"/>
+    <node name="leg_br_pose_action_server" pkg="quadruped_control" type="leg_br_pose_action_server" respawn="true"/>
+    <node name="leg_bl_pose_action_server" pkg="quadruped_control" type="leg_bl_pose_action_server" respawn="true"/>
+    <node name="tail_pose_action_server" pkg="quadruped_control" type="tail_pose_action_server" respawn="true"/>
 
     <!-- Start up gait controllers -->
     <rosparam file="$(find quadruped_control)/config/gait_parameters.yaml" ns="/quadruped/gait"/>
@@ -26,4 +26,8 @@
     <node name="leg_br_trajectory_action_server" pkg="quadruped_control" type="leg_br_trajectory_action_server" respawn="false"/>
     <node name="leg_bl_trajectory_action_server" pkg="quadruped_control" type="leg_bl_trajectory_action_server" respawn="false"/>
     <node name="gait_controller" pkg="quadruped_control" type="gait_controller" respawn="false"/>
+
+    <!-- Start up force sensor and stability stuff -->
+    <node name="force_sensor_node" pkg="quadruped_control" type="force_sensor_node" respawn="true"/>
+    <node name="stability_margin_node" pkg="quadruped_control" type="stability_margin_node" respawn="true"/>
 </launch>

@@ -4,6 +4,7 @@
 #include "quadruped_control/MoveAction.h"
 #include "quadruped_control/Pose.h"
 #include "std_msgs/Float64.h"
+#include "std_msgs/Bool.h"
 #include "gazebo_msgs/GetLinkState.h"
 
 class GaitController
@@ -23,6 +24,8 @@ public:
             "/quadruped/gait/duty_factor", 1);
         this->bodyVelocityPublisher = node.advertise<std_msgs::Float64>(
             "/quadruped/gait/body_velocity", 1);
+        this->stopCommandPublisher = node.advertise<std_msgs::Bool>(
+            "/quadruped/gait/stop", 1);
 
         ROS_INFO("Subscribing to Gazebo GetLinkState service");
         this->linkStateClient = node.serviceClient<gazebo_msgs::GetLinkState>("/gazebo/get_link_state");
@@ -78,6 +81,9 @@ public:
         std_msgs::Float64 msg;
         msg.data = dutyRatio;
         this->dutyRatioPublisher.publish(msg);
+        
+        std_msgs::Bool stopCommand;
+        stopCommand.data = true;
 
         // Send goals to trajectory servers
         ROS_INFO("Initializing leg trajectories...");
@@ -113,6 +119,9 @@ public:
         bool preempted = false;
         bool aborted = false;
         std::string description = "Ramping up.";
+        velocity = 0.01;
+
+        ROS_INFO("Ramp up stage.");
         while (true)
         {
             // Calculate elapsed time
@@ -158,6 +167,7 @@ public:
                     rampDistance = distanceTraveled;
                     stage = 1;
                     description = "Constant velocity.";
+                    ROS_INFO("Constant velocity stage.");
                 }
             }
             else if (stage == 1) // Constant velocity stage
@@ -166,6 +176,7 @@ public:
                 {
                     stage = 2;
                     description = "Slowing down.";
+                    ROS_INFO("Slowing down stage.");
                 }
             }
             else if (stage == 2) // Slow-down stage
@@ -184,16 +195,18 @@ public:
                 // Hit zero velocity
                 else
                 {
-                    msg.data = 1;
-                    this->dutyRatioPublisher.publish(msg);
+                    this->stopCommandPublisher.publish(stopCommand);
                     stage = 3;
                     description = "Stopping.";
+                    ROS_INFO("Stopping stage.");
                 }
             }
             else // Stopping stage
             {
+                this->stopCommandPublisher.publish(stopCommand);
                 if (!frIsActive && !flIsActive && !brIsActive && !blIsActive)
                 {
+                    ROS_INFO("Stopped.");
                     break;
                 }
             }
@@ -311,6 +324,7 @@ private:
     quadruped_control::MoveResult actionResult;
     ros::Publisher dutyRatioPublisher;
     ros::Publisher bodyVelocityPublisher;
+    ros::Publisher stopCommandPublisher;
     ros::ServiceClient linkStateClient;
 };
 

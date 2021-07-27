@@ -4,6 +4,7 @@
 #include "quadruped_control/GaitAction.h"
 #include "quadruped_control/Pose.h"
 #include "std_msgs/Float64.h"
+#include "std_msgs/Bool.h"
 #include "geometry_msgs/Pose.h"
 #include "gazebo_msgs/GetLinkState.h"
 #include "math.h"
@@ -27,6 +28,7 @@ public:
 
         ROS_INFO("Subscribing to Gazebo GetLinkState service");
         this->linkStateClient = node.serviceClient<gazebo_msgs::GetLinkState>("/gazebo/get_link_state");
+        this->stopCommandSubscriber = node.subscribe("/quadruped/gait/stop", 10, &SetTrajectoryAction::stopCommandCB, this);
 		
 		ROS_INFO("Starting...");
 		server.start();
@@ -39,12 +41,6 @@ public:
 
 	void executeCB(const quadruped_control::GaitGoalConstPtr &goal)
 	{
-        // Get initial foot position w.r.t. body
-        // auto initialFootPosition = GetFootPosition();
-        // xOffset = initialFootPosition.x;
-        // yOffset = initialFootPosition.y;
-        // zOffset = initialFootPosition.z;
-
 		double start = ros::Time::now().toSec();
 
 		this->initialPhase = goal->initialPhase;
@@ -53,6 +49,8 @@ public:
 		double eps = 0.05;
 		
 		int state = 0;
+        bool preempted = false;
+        stop = false;
 
 		double t;
 		int stepsTaken = 0;
@@ -62,10 +60,22 @@ public:
 		ros::Rate rate(50);
 		while (true)
 		{
+            // Check if preempted or canceled
+            if (server.isPreemptRequested() || !ros::ok())
+            {
+                ROS_INFO("Trajectory action preempted, ending trajectory...");
+                preempted = true;
+            }
+
 			t = ros::Time::now().toSec() - start + this->initialPhase * strideTime; // account for initialPhase
 
 			currentPhase = fmod(t / this->strideTime, 1.0);
 			auto position = SineTrajectory(currentPhase);
+
+            if ((stop || preempted) && stage.compare("Support Phase") == 0)
+            {
+                break;
+            }
 
 			// Calculate the targetPose
 			targetPose.x = position.x;
@@ -94,8 +104,15 @@ public:
 		}
 
 		// Publish result
-		this->actionResult.stepsTaken = stepsTaken;
-		server.setSucceeded(this->actionResult);
+        this->actionResult.stepsTaken = stepsTaken;
+        if (preempted)
+        {
+            server.setPreempted(this->actionResult);
+        }
+        else
+        {
+		    server.setSucceeded(this->actionResult);
+        }
 	}
 
 	void publishFeedback(const quadruped_control::SetPoseFeedback::ConstPtr& poseFeedback)
@@ -124,6 +141,11 @@ public:
 		this->bodyVelocity = msg->data;
 	}
 
+    void stopCommandCB(const std_msgs::BoolConstPtr& msg)
+	{
+		this->stop = msg->data;
+	}
+
 private:
 	std::string actionName;
 	ros::NodeHandle node;
@@ -134,6 +156,7 @@ private:
 	quadruped_control::GaitResult actionResult;
 	ros::Subscriber dutyFactorSubscriber;
 	ros::Subscriber bodyVelocitySubscriber;
+    ros::Subscriber stopCommandSubscriber;
 	quadruped_control::Pose currentPose;
 	double initialPhase;
 	double currentPhase;
@@ -141,13 +164,10 @@ private:
 	double strideHeight;
 	double dutyFactor;
 	double bodyVelocity;
-    // 0.1778 0.1524 0
-    // double xOffset = 0.1778;
-    // double yOffset = 0.1524;
-    // double zOffset = -0.305;
     double xOffset = 0.0639;
     double yOffset = 0.1524;
     double zOffset = -0.2855;
+    bool stop = false;
     std::string stage;
 
     geometry_msgs::Point GetFootPosition()

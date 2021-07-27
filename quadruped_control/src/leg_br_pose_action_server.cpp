@@ -61,6 +61,7 @@ public:
         this->kneeTarget = ikMsg.response.solution[1];
         this->ankleTarget = ikMsg.response.solution[2];
         this->eps = goal->eps;
+        this->actionFeedback.target = goal->goal;
 
         // Send joint positions to joint action client
         quadruped_control::SetJointGoal jointAction;

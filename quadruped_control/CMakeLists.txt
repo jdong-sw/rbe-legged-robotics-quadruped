@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
     gazebo_msgs
     kdl_parser
     message_generation
+    tf2
 )
 
 ## System dependencies are found with CMake's conventions
@@ -161,6 +162,9 @@ add_executable(leg_fr_trajectory_action_server src/leg_fr_trajectory_action_serv
 add_executable(leg_fl_trajectory_action_server src/leg_fl_trajectory_action_server.cpp)
 add_executable(leg_br_trajectory_action_server src/leg_br_trajectory_action_server.cpp)
 add_executable(leg_bl_trajectory_action_server src/leg_bl_trajectory_action_server.cpp)
+add_executable(walk_node scripts/walk_node.cpp)
+add_executable(force_sensor_node src/force_sensor_node.cpp)
+add_executable(stability_margin_node src/stability_margin_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -187,6 +191,9 @@ add_dependencies(leg_fr_trajectory_action_server ${PROJECT_NAME}_generate_messag
 add_dependencies(leg_fl_trajectory_action_server ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(leg_br_trajectory_action_server ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(leg_bl_trajectory_action_server ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(walk_node ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(force_sensor_node ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(stability_margin_node ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -208,6 +215,9 @@ target_link_libraries(leg_fr_trajectory_action_server ${catkin_LIBRARIES})
 target_link_libraries(leg_fl_trajectory_action_server ${catkin_LIBRARIES})
 target_link_libraries(leg_br_trajectory_action_server ${catkin_LIBRARIES})
 target_link_libraries(leg_bl_trajectory_action_server ${catkin_LIBRARIES})
+target_link_libraries(walk_node ${catkin_LIBRARIES})
+target_link_libraries(force_sensor_node ${catkin_LIBRARIES})
+target_link_libraries(stability_margin_node ${catkin_LIBRARIES})
 
 #############
 ## Install ##

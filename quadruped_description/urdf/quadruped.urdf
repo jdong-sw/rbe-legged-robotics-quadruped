@@ -106,6 +106,19 @@
                 </friction>
             </surface>
         </collision>
+
+        <sensor name="tibia_fr_sensor" type="contact">
+            <selfCollide>true</selfCollide>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>15.0</updateRate>
+            <contact>
+                <collision>tibia_fr_collision</collision>
+            </contact>
+            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">   
+                <bumperTopicName>tibia_fr_bumper</bumperTopicName>
+                <frameName>world</frameName>
+            </plugin>
+        </sensor>
     </gazebo>
 
     <link name="foot_fr" />
@@ -164,8 +177,26 @@
                 </friction>
             </surface>
         </collision>
+
+        <sensor name="tibia_fl_sensor" type="contact">
+            <selfCollide>true</selfCollide>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>15.0</updateRate>
+            <contact>
+                <collision>tibia_fl_collision</collision>
+            </contact>
+            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">   
+                <bumperTopicName>tibia_fl_bumper</bumperTopicName>
+                <frameName>world</frameName>
+            </plugin>
+        </sensor>
     </gazebo>
-    <link name="foot_fl" />
+    <link name="foot_fl">
+        <inertial>
+            <mass value="0.29" />
+            <inertia ixx="0.0002" iyy="0.0112" izz="0.0113" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
 
     <!-- ================== Rear-Right Leg Links ================== -->
     <link name="coxa_br">
@@ -221,8 +252,31 @@
                 </friction>
             </surface>
         </collision>
+
+        <sensor name="tibia_br_sensor" type="contact">
+            <selfCollide>true</selfCollide>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>15.0</updateRate>
+            <contact>
+                <collision>tibia_br_collision</collision>
+            </contact>
+            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">   
+                <bumperTopicName>tibia_br_bumper</bumperTopicName>
+                <frameName>world</frameName>
+            </plugin>
+        </sensor>
     </gazebo>
-    <link name="foot_br" />
+    <link name="foot_br">
+        <visual>
+            <geometry>
+                <sphere radius="0.001"/>
+            </geometry>
+        </visual>
+        <inertial>
+            <mass value="0.0001" />
+            <inertia ixx="0.00001" iyy="0.00001" izz="0.00001" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
 
     <!-- ================== Rear-Left Leg Links ================== -->
     <link name="coxa_bl">
@@ -278,7 +332,21 @@
                 </friction>
             </surface>
         </collision>
+
+        <sensor name="tibia_bl_sensor" type="contact">
+            <selfCollide>true</selfCollide>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>15.0</updateRate>
+            <contact>
+                <collision>tibia_bl_collision</collision>
+            </contact>
+            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">   
+                <bumperTopicName>tibia_bl_bumper</bumperTopicName>
+                <frameName>world</frameName>
+            </plugin>
+        </sensor>
     </gazebo>
+
     <link name="foot_bl" />
 
     <!-- ================== Tail Joints ================== -->
@@ -365,6 +433,9 @@
         <parent link="tibia_fl" />
         <child link="foot_fl" />
     </joint>
+    <gazebo reference="joint_foot_fl">
+        <disableFixedJointLumping>true</disableFixedJointLumping>
+    </gazebo>
 
     <!-- ================== Rear-Right Leg Joints ================== -->
     <joint name="joint_hip_br" type="revolute">
@@ -396,6 +467,7 @@
         <parent link="tibia_br" />
         <child link="foot_br" />
     </joint>
+
 
     <!-- ================== Rear-Left Leg Joints ================== -->
     <joint name="joint_hip_bl" type="revolute">

@@ -51,7 +51,7 @@ public:
         hipJointPublisher.publish(hipJointCommand);
         kneeJointPublisher.publish(kneeJointCommand);
         ankleJointPublisher.publish(ankleJointCommand);
-        ROS_INFO("Published joint targets to controllers.");
+        this->actionFeedback.targets = goal->goal;
 
         // Get current time
         double start = ros::Time::now().toSec();
@@ -62,7 +62,7 @@ public:
             this->actionResult.result = currentState.position;
             this->actionResult.error = calculateJointError();
             this->actionResult.time = 0;
-            server.setSucceeded();
+            server.setSucceeded(actionResult);
             return;
         }
 
@@ -138,7 +138,7 @@ public:
 
         double jointError = calculateJointError();
 
-        return magnitude < 0.01 && jointError < eps;
+        return magnitude < 0.05 && jointError < eps;
     }
 
     void jointStatesCB(const sensor_msgs::JointStateConstPtr& msg)
