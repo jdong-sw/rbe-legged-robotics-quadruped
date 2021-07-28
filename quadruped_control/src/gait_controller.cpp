@@ -85,6 +85,10 @@ public:
         std_msgs::Bool stopCommand;
         stopCommand.data = true;
 
+        double velocity = 0.0;
+        msg.data = velocity;
+        this->bodyVelocityPublisher.publish(msg);
+
         // Send goals to trajectory servers
         ROS_INFO("Initializing leg trajectories...");
         quadruped_control::GaitGoal gaitAction;
@@ -115,11 +119,10 @@ public:
         ROS_INFO("Starting gait...");
         ros::Rate rate(50);
         int stage = 0;
-        double distanceTraveled, velocity, stride, rampTime, rampDistance;
+        double distanceTraveled, stride, rampTime, rampDistance;
         bool preempted = false;
         bool aborted = false;
         std::string description = "Ramping up.";
-        velocity = 0.01;
 
         ROS_INFO("Ramp up stage.");
         while (true)
@@ -172,6 +175,8 @@ public:
             }
             else if (stage == 1) // Constant velocity stage
             {
+                msg.data = bodyVelocity;
+                this->bodyVelocityPublisher.publish(msg);
                 if (distanceTraveled >= targetDistance - rampDistance)
                 {
                     stage = 2;

@@ -51,9 +51,10 @@ public:
 		int state = 0;
         bool preempted = false;
         stop = false;
+        initialized = false;
 
-		double t;
-		int stepsTaken = 0;
+		double t, elapsed;
+		steps = 0;
 		currentPhase = this->initialPhase;
 		quadruped_control::Pose targetPose;
 
@@ -67,17 +68,33 @@ public:
                 preempted = true;
             }
 
-			t = ros::Time::now().toSec() - start + this->initialPhase * strideTime; // account for initialPhase
+            elapsed = ros::Time::now().toSec() - start;
+			t = elapsed + this->initialPhase * strideTime; // account for initialPhase
 
+            // Calculate the current phase
 			currentPhase = fmod(t / this->strideTime, 1.0);
-			auto position = SineTrajectory(currentPhase);
+            if (!initialized && currentPhase >= dutyFactor)
+            {
+                initialized = true;
+            }
+
+            // Calculate the target position
+            geometry_msgs::Point position;
+            if (!initialized)
+            {
+                position = InitialTrajectory(elapsed);
+            }
+            else
+            {
+                position = SineTrajectory(currentPhase);
+            }
 
             if ((stop || preempted) && stage.compare("Support Phase") == 0)
             {
                 break;
             }
 
-			// Calculate the targetPose
+			// Build message
 			targetPose.x = position.x;
 			targetPose.y = position.y;
 			targetPose.z = position.z;
@@ -98,13 +115,18 @@ public:
 			this->actionFeedback.targetPose = targetPose;
 			this->actionFeedback.currentPose = currentPose;
             this->actionFeedback.stage = stage;
-            server.publishFeedback(this->actionFeedback);
+			server.publishFeedback(this->actionFeedback);
+
+            if (currentPhase == initialPhase)
+            {
+                steps++;
+            }
 
 			rate.sleep();
 		}
 
 		// Publish result
-        this->actionResult.stepsTaken = stepsTaken;
+        this->actionResult.stepsTaken = steps;
         if (preempted)
         {
             server.setPreempted(this->actionResult);
@@ -164,19 +186,34 @@ private:
 	double strideHeight;
 	double dutyFactor;
 	double bodyVelocity;
-    double xOffset = -0.2110;
+    // double xOffset = -0.1695;
+    // double yOffset = -0.1524;
+    // double zOffset = -0.2855;
+    double xOffset = -0.2;
     double yOffset = -0.1524;
-    double zOffset = -0.2855;
+    double zOffset = -0.275;
     bool stop = false;
+    bool initialized = false;
+    int steps = 0;
     std::string stage;
 
-    geometry_msgs::Point GetFootPosition()
+    geometry_msgs::Point InitialTrajectory(double elapsed)
     {
-        gazebo_msgs::GetLinkState linkStateMsg;
-        linkStateMsg.request.link_name = "foot_br";
-        linkStateMsg.request.reference_frame = "body";
-        this->linkStateClient.call(linkStateMsg);
-        return linkStateMsg.response.link_state.pose.position;
+        // Position w.r.t. body
+        geometry_msgs::Point position;
+        double x, y, z;
+
+        // Just move forward until reach initial phase
+        x = xOffset - bodyVelocity * elapsed;
+        y = yOffset;
+        z = zOffset;
+        stage = "Initialization";
+
+        position.x = x;
+        position.y = y;
+        position.z = z;
+
+        return position;
     }
 
     geometry_msgs::Point SineTrajectory(double phase)

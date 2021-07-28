@@ -78,6 +78,12 @@ public:
         ros::Rate rate(50);
         while(isRobotIdle())
         {
+            if (server.isPreemptRequested() || !ros::ok())
+            {
+                ROS_INFO("Pose action preempted.");
+                server.setPreempted();
+                return;
+            }
             rate.sleep();
         }
 
