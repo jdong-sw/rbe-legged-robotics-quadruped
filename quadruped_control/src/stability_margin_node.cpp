@@ -35,8 +35,10 @@ public:
         if (flForce > 0) forces.push_back(flForce);
         if (brForce > 0) forces.push_back(brForce);
         if (blForce > 0) forces.push_back(blForce);
-        if (forces.size() == 0)
+        if (forces.size() < 3)
         {
+            ffsmMsg.data = 0;
+            stabilityPublisher.publish(ffsmMsg);
             return;
         }
 

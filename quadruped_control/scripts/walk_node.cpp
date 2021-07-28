@@ -1,3 +1,4 @@
+#include <iostream>
 #include "quadruped_control/MoveAction.h"
 #include "quadruped_control/SetJointAction.h"
 #include "actionlib/client/simple_action_client.h"
@@ -9,16 +10,17 @@ public:
     {
         this->node = node;
 
+        ROS_INFO("Opening up file to write...");
+        std::ofstream dat();
+        
+
         ROS_INFO("Waiting for Move Server...");
         this->client.waitForServer(ros::Duration(30));
-
-        ros::Rate rate(0.5);
 
         ROS_INFO("Sending gait goal...");
         quadruped_control::MoveGoal goal;
         goal.distance = 1;
         goal.gaitType = 0;
-        goal.time = 0;
 
         this->client.sendGoal(goal,
             boost::bind(&WalkNode::resultCB, this, _1, _2),
