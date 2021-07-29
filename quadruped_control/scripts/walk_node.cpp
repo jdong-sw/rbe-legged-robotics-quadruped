@@ -10,10 +10,6 @@ public:
     {
         this->node = node;
 
-        ROS_INFO("Opening up file to write...");
-        std::ofstream dat();
-        
-
         ROS_INFO("Waiting for Move Server...");
         this->client.waitForServer(ros::Duration(30));
 

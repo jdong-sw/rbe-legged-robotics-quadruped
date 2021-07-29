@@ -94,8 +94,8 @@
 
     </link>
     <gazebo reference="tibia_fr">
-        <kp>1000000.0</kp> <!--contact stiffness-->
-        <kd>100.0</kd> <!--damping-->
+        <kp>1000000.0</kp>        <!--contact stiffness-->
+        <kd>100.0</kd>        <!--damping-->
         <collision name="tibia_fr_collision">
             <surface>
                 <friction>
@@ -110,11 +110,11 @@
         <sensor name="tibia_fr_sensor" type="contact">
             <selfCollide>true</selfCollide>
             <alwaysOn>true</alwaysOn>
-            <updateRate>15.0</updateRate>
+            <updateRate>40.0</updateRate>
             <contact>
                 <collision>tibia_fr_collision</collision>
             </contact>
-            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">   
+            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">
                 <bumperTopicName>tibia_fr_bumper</bumperTopicName>
                 <frameName>world</frameName>
             </plugin>
@@ -165,8 +165,8 @@
         </inertial>
     </link>
     <gazebo reference="tibia_fl">
-        <kp>1000000.0</kp> <!--contact stiffness-->
-        <kd>100.0</kd> <!--damping-->
+        <kp>1000000.0</kp>        <!--contact stiffness-->
+        <kd>100.0</kd>        <!--damping-->
         <collision name="tibia_fl_collision">
             <surface>
                 <friction>
@@ -181,22 +181,17 @@
         <sensor name="tibia_fl_sensor" type="contact">
             <selfCollide>true</selfCollide>
             <alwaysOn>true</alwaysOn>
-            <updateRate>15.0</updateRate>
+            <updateRate>40.0</updateRate>
             <contact>
                 <collision>tibia_fl_collision</collision>
             </contact>
-            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">   
+            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">
                 <bumperTopicName>tibia_fl_bumper</bumperTopicName>
                 <frameName>world</frameName>
             </plugin>
         </sensor>
     </gazebo>
-    <link name="foot_fl">
-        <inertial>
-            <mass value="0.29" />
-            <inertia ixx="0.0002" iyy="0.0112" izz="0.0113" ixy="0.0" ixz="0.0" iyz="0.0" />
-        </inertial>
-    </link>
+    <link name="foot_fl"/>
 
     <!-- ================== Rear-Right Leg Links ================== -->
     <link name="coxa_br">
@@ -240,8 +235,8 @@
         </inertial>
     </link>
     <gazebo reference="tibia_br">
-        <kp>1000000.0</kp> <!--contact stiffness-->
-        <kd>100.0</kd> <!--damping-->
+        <kp>1000000.0</kp>        <!--contact stiffness-->
+        <kd>100.0</kd>        <!--damping-->
         <collision name="tibia_br_collision">
             <surface>
                 <friction>
@@ -256,27 +251,17 @@
         <sensor name="tibia_br_sensor" type="contact">
             <selfCollide>true</selfCollide>
             <alwaysOn>true</alwaysOn>
-            <updateRate>15.0</updateRate>
+            <updateRate>40.0</updateRate>
             <contact>
                 <collision>tibia_br_collision</collision>
             </contact>
-            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">   
+            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">
                 <bumperTopicName>tibia_br_bumper</bumperTopicName>
                 <frameName>world</frameName>
             </plugin>
         </sensor>
     </gazebo>
-    <link name="foot_br">
-        <visual>
-            <geometry>
-                <sphere radius="0.001"/>
-            </geometry>
-        </visual>
-        <inertial>
-            <mass value="0.0001" />
-            <inertia ixx="0.00001" iyy="0.00001" izz="0.00001" ixy="0.0" ixz="0.0" iyz="0.0" />
-        </inertial>
-    </link>
+    <link name="foot_br"/>
 
     <!-- ================== Rear-Left Leg Links ================== -->
     <link name="coxa_bl">
@@ -320,8 +305,8 @@
         </inertial>
     </link>
     <gazebo reference="tibia_bl">
-        <kp>1000000.0</kp> <!--contact stiffness-->
-        <kd>100.0</kd> <!--damping-->
+        <kp>1000000.0</kp>        <!--contact stiffness-->
+        <kd>100.0</kd>        <!--damping-->
         <collision name="tibia_bl_collision">
             <surface>
                 <friction>
@@ -336,11 +321,11 @@
         <sensor name="tibia_bl_sensor" type="contact">
             <selfCollide>true</selfCollide>
             <alwaysOn>true</alwaysOn>
-            <updateRate>15.0</updateRate>
+            <updateRate>40.0</updateRate>
             <contact>
                 <collision>tibia_bl_collision</collision>
             </contact>
-            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">   
+            <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">
                 <bumperTopicName>tibia_bl_bumper</bumperTopicName>
                 <frameName>world</frameName>
             </plugin>
@@ -433,9 +418,6 @@
         <parent link="tibia_fl" />
         <child link="foot_fl" />
     </joint>
-    <gazebo reference="joint_foot_fl">
-        <disableFixedJointLumping>true</disableFixedJointLumping>
-    </gazebo>
 
     <!-- ================== Rear-Right Leg Joints ================== -->
     <joint name="joint_hip_br" type="revolute">
@@ -646,7 +628,28 @@
         </actuator>
     </transmission>
 
+    <!-- <gazebo>
+        <controller:gazebo_ros_imu name="imu_controller" plugin="libgazebo_ros_imu.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>50.0</updateRate>
+            <bodyName>body</bodyName>
+            <topicName>imu_data</topicName>
+            <gaussianNoise>2.89e-08</gaussianNoise>
+            <xyzOffsets>0 0 0</xyzOffsets>
+            <rpyOffsets>0 0 0</rpyOffsets>
+            <interface:position name="imu_position"/>
+        </controller:gazebo_ros_imu>
+    </gazebo> -->
+
     <gazebo>
+        <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+            <alwaysOn>true</alwaysOn>
+            <bodyName>body</bodyName>
+            <topicName>imu</topicName>
+            <serviceName>imu_service</serviceName>
+            <gaussianNoise>0.0</gaussianNoise>
+            <updateRate>40.0</updateRate>
+        </plugin>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
             <robotNamespace>/quadruped</robotNamespace>
         </plugin>

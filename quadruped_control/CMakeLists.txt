@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
     kdl_parser
     message_generation
     tf2
+    tf2_ros
 )
 
 ## System dependencies are found with CMake's conventions
@@ -59,6 +60,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   Pose.msg
+  VectorOfPoints.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -165,6 +167,8 @@ add_executable(leg_bl_trajectory_action_server src/leg_bl_trajectory_action_serv
 add_executable(walk_node scripts/walk_node.cpp)
 add_executable(force_sensor_node src/force_sensor_node.cpp)
 add_executable(stability_margin_node src/stability_margin_node.cpp)
+add_executable(tail_controller src/tail_controller.cpp)
+add_executable(com_publisher src/com_publisher.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -193,7 +197,8 @@ add_dependencies(leg_br_trajectory_action_server ${PROJECT_NAME}_generate_messag
 add_dependencies(leg_bl_trajectory_action_server ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(walk_node ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(force_sensor_node ${PROJECT_NAME}_generate_messages_cpp)
-add_dependencies(stability_margin_node ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(tail_controller ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(com_publisher ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -218,6 +223,8 @@ target_link_libraries(leg_bl_trajectory_action_server ${catkin_LIBRARIES})
 target_link_libraries(walk_node ${catkin_LIBRARIES})
 target_link_libraries(force_sensor_node ${catkin_LIBRARIES})
 target_link_libraries(stability_margin_node ${catkin_LIBRARIES})
+target_link_libraries(tail_controller ${catkin_LIBRARIES})
+target_link_libraries(com_publisher ${catkin_LIBRARIES})
 
 #############
 ## Install ##

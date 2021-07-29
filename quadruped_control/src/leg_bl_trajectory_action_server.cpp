@@ -186,12 +186,12 @@ private:
 	double strideHeight;
 	double dutyFactor;
 	double bodyVelocity;
-    // double xOffset = -0.1695;
-    // double yOffset = 0.1524;
-    // double zOffset = -0.2855;
-    double xOffset = -0.2;
+    double xOffset = -0.1695;
     double yOffset = 0.1524;
-    double zOffset = -0.275;
+    double zOffset = -0.2855;
+    // double xOffset = -0.2;
+    // double yOffset = 0.1524;
+    // double zOffset = -0.275;
     int steps = 0;
     bool stop = false;
     bool initialized = false;

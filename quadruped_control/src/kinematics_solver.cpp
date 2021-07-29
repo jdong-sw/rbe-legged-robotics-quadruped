@@ -48,7 +48,7 @@ namespace quadruped_control
         bool solveIKPoseTail(quadruped_control::SolveIKPoseRequest &req,
                          quadruped_control::SolveIKPoseResponse &res)
         {
-            return solveIKPose(req, res, this->tail);
+            return solveIKPose(req, res, this->tail, true);
         }
 
         bool solveIKPoseLegFR(quadruped_control::SolveIKPoseRequest &req,
@@ -77,14 +77,22 @@ namespace quadruped_control
 
         bool solveIKPose(quadruped_control::SolveIKPoseRequest &req,
                          quadruped_control::SolveIKPoseResponse &res,
-                         KDL::Chain chain)
+                         KDL::Chain chain,
+                         bool isTail = false)
         {
             ROS_DEBUG("Solving IK Pose...");
 
             ROS_DEBUG("Initializing solver...");
 
             Eigen::Matrix<double, 6, 1> weights;
-            weights.col(0) << 1.0, 1.0, 1.0, 0.0, 0.0, 0.0;
+            if (isTail)
+            {
+                weights.col(0) << 1.0, 1.0, 0.0, 0.0, 0.0, 0.0;
+            }
+            else
+            {
+                weights.col(0) << 1.0, 1.0, 1.0, 0.0, 0.0, 0.0;
+            }
 
             KDL::ChainIkSolverPos_LMA posSolver(chain, weights);
             std::vector<double> initialstate = req.initialState;

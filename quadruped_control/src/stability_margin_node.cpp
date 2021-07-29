@@ -18,7 +18,7 @@ public:
         this->stabilityPublisher = node->advertise<std_msgs::Float64>("/stability/ffsm", 1);
 
         ROS_INFO("Publishing stability...");
-        timer = node->createTimer(ros::Duration(1.0 / 10.0),
+        timer = node->createTimer(ros::Duration(1.0/40.0),
                         std::bind(&StabilityMarginNode::publishStability, this));
     }
 

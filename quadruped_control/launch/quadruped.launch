@@ -30,4 +30,5 @@
     <!-- Start up force sensor and stability stuff -->
     <node name="force_sensor_node" pkg="quadruped_control" type="force_sensor_node" respawn="true"/>
     <node name="stability_margin_node" pkg="quadruped_control" type="stability_margin_node" respawn="true"/>
+    <node name="tail_controller" pkg="quadruped_control" type="tail_controller" respawn="true"/>
 </launch>
