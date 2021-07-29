@@ -51,7 +51,7 @@ public:
         double r, p, y;
         m.getRPY(r, p, y);
 
-        // Move the tail in the direction weightVector
+        // Move the tail to counteract body angle
         std_msgs::Float64 tailYawCommand, tailPitchCommand;
         tailYawCommand.data = -1*gain*r;
         tailPitchCommand.data = -1*gain*p + offset;
