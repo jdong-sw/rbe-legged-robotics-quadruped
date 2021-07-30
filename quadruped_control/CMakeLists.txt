@@ -15,7 +15,6 @@ find_package(catkin REQUIRED COMPONENTS
     std_msgs
     geometry_msgs
     control_msgs
-    trajectory_msgs
     gazebo_msgs
     kdl_parser
     message_generation

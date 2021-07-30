@@ -51,6 +51,15 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>message_generation</build_depend>
   <exec_depend>message_runtime</exec_depend>
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>actionlib</depend>
+  <depend>kdl_parser</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>control_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>actionlib_msgs</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
