@@ -27,6 +27,7 @@ To load the robot in Gazebo, launch the adaptive_guide_launch.py file:
 ```bash
 roslaunch quadruped_control quadruped.launch
 ```
+Gazebo starts paused, so unpause it after it finishes starting up.
 ### Walking
 To make the robot walk, you can either run the walk_node:
 ```bash
